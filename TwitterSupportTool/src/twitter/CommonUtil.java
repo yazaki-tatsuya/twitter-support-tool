@@ -6,10 +6,10 @@ import twitter4j.conf.ConfigurationBuilder;
 
 public class CommonUtil {
 	
-	public String ConsumerKey = "KBsTLRRfGvaBQASpEpYaihtnY";
-	public String ConsumerSecret = "j7EJxXth5r1SJ0aDMVOIQgFxpPj1K0i7BWW7yCp9zhs5mxqjcC";
-	public String AccessToken = "2581628527-5ws90pIb9gmV4izENmcneE2CuN6TVzQpdPLo1LY";
-	public String AccessTokenSecret = "OoLwyCKsLjNaHvBuDM6aUHysyHhovvoYe2h3BaDZQs7MW";
+	public String ConsumerKey = "";
+	public String ConsumerSecret = "";
+	public String AccessToken = "";
+	public String AccessTokenSecret = "";
 	
 	//#### 事前準備処理のクラス
 	public Twitter getTwitter() {
