@@ -6,10 +6,10 @@ import twitter4j.conf.ConfigurationBuilder;
 
 public class CommonUtil {
 	
-	public String ConsumerKey = "REMOVED_TOKEN1";
-	public String ConsumerSecret = "REMOVED_TOKEN2";
-	public String AccessToken = "REMOVED_TOKEN3";
-	public String AccessTokenSecret = "REMOVED_TOKEN4";
+	public String ConsumerKey = "";
+	public String ConsumerSecret = "";
+	public String AccessToken = "";
+	public String AccessTokenSecret = "";
 	
 	//#### 事前準備処理のクラス
 	public Twitter getTwitter() {
