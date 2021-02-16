@@ -6,6 +6,9 @@ target/
 *.war
 *.jar*
 *old*
+twitterapi_test/
+*Test*
+*_NG.*
 
 # eclipse workspace (if ever included)
 .metadata/
