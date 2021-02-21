@@ -8,7 +8,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-@WebServlet("/follower_search_csv")
+import utils.RoutingTable;
+
+@WebServlet(RoutingTable.followerV2_csv)
 public class TwitterFollowerSearchAjaxCsv extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;

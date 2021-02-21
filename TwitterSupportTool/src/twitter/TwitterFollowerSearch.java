@@ -12,8 +12,9 @@ import javax.servlet.http.HttpServletResponse;
 
 import twitter4j.User;
 import twitterapi_functions.FollowerInfo;
+import utils.RoutingTable;
 
-@WebServlet("/follower_search")
+@WebServlet(RoutingTable.follower_sv)
 public class TwitterFollowerSearch extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
@@ -27,7 +28,8 @@ public class TwitterFollowerSearch extends HttpServlet {
 		request.setAttribute("targetuser", searchTarget);	
 		System.out.println("*******************"+searchTarget);
 		//# 遷移先画面
-		String forwardpage = "./TwitterGetFollowerResult.jsp";
+		String forwardpage = RoutingTable.follower_r;
+		System.out.println("### : Get the forward page = "+forwardpage);
 
 		//# 最終結果の格納用
 		List<Long> id = new ArrayList<Long>();
@@ -37,7 +39,7 @@ public class TwitterFollowerSearch extends HttpServlet {
 		
 		//# フォロワーのID一覧取得（FollowerInfoクラス）
 		FollowerInfo fi = new FollowerInfo();
-		User[] followers = fi.getAllFollowersInfo("Rainbow_Engine");
+		User[] followers = fi.getAllFollowersInfo(searchTarget);
 		if(followers != null) {
 			for(User follower : followers) {
 				id.add(follower.getId());

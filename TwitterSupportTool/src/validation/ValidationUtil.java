@@ -9,9 +9,12 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
+import utils.RoutingTable;
+
 import javax.servlet.RequestDispatcher;
 
-@WebServlet("/ValidationUtil")
+@WebServlet(RoutingTable.val_util)
 public class ValidationUtil extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
@@ -20,8 +23,10 @@ public class ValidationUtil extends HttpServlet {
 	{
 		//# エンコーディング方式の設定
 		request.setCharacterEncoding("UTF-8");
+		//# バリデーション対象画面の取得
 		String func = request.getParameter("FunctionId");
 		System.out.println("#### 1:"+func);
+		//# 対象画面のバリデーションを実施
 		if(func.equals("TWFAVSCH")) {TWFAVSCH_Validate(request,response);}
 	}
 	
@@ -69,7 +74,8 @@ public class ValidationUtil extends HttpServlet {
 			//# エラーメッセージをリクエストの属性としてセット
 			request.setAttribute("error_msg", getErrorList());
 			//# エラーメッセージを表示するため、再び項目の入力画面に戻る
-			String nextpage="/TwitterHashTagSearchWithFavQuery.jsp";
+			String nextpage= "/" + RoutingTable.hashtagV2_q;
+			//String nextpage="/TwitterHashTagSearchWithFavQuery.jsp";
 			RequestDispatcher rd = getServletContext().getRequestDispatcher(nextpage);
 			rd.forward(request, response);
 		}
@@ -80,7 +86,8 @@ public class ValidationUtil extends HttpServlet {
 			session.setAttribute("searchTag", request.getParameter("searchTag"));
 			session.setAttribute("searchFav", request.getParameter("searchFav"));		
 			//# バリデーションに問題がなければ次画面へ遷移
-			String nextpage="/hashtag_search_with_fav";
+			String nextpage = RoutingTable.hashtagV2_sv;
+			//String nextpage="/hashtag_search_with_fav";
 			RequestDispatcher rd = getServletContext().getRequestDispatcher(nextpage);
 			rd.forward(request, response);
 		}

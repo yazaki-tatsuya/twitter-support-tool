@@ -18,8 +18,9 @@ import twitter4j.QueryResult;
 import twitter4j.Status;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
+import utils.RoutingTable;
 
-@WebServlet("/hashtag_search_with_fav")
+@WebServlet(RoutingTable.hashtagV2_sv)
 public class TwitterHashTagSearchWithFav extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -40,7 +41,8 @@ public class TwitterHashTagSearchWithFav extends HttpServlet {
 		
 		request.setAttribute("hashtag", searchTarget);	
 		//# 遷移先画面
-		String forwardpage = "./TwitterHashTagSearchWithFavResult.jsp";		
+		String forwardpage = RoutingTable.hashtagV2_r;
+		System.out.println("### : Get the forward page = "+forwardpage);
 
 		//#### ハッシュタグによる検索
 		//# ハッシュタグの検索用クラス(Query)
