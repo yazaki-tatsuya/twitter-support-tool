@@ -1,9 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="utils.RoutingTable" %>
 <!DOCTYPE html>
 <html class="font_1">
 <head>
 <meta charset="UTF-8">
-<%--<link rel="stylesheet" type="text/css" href="css/TwitterTool.css">--%>
+<link rel="stylesheet" type="text/css" href=<%=RoutingTable.twitter_css_auth %>>
 <title>Login to Twitter Support Tool</title>
 	<img src="https://rainbow-engine.com/wp-content/uploads/Common/20200725_HeaderIcon.jpg" alt="" class="header_img"/><br /><br />
 	<center>

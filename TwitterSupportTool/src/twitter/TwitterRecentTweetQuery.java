@@ -18,8 +18,9 @@ import twitter4j.ResponseList;
 import twitter4j.Status;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
+import utils.RoutingTable;
 
-@WebServlet("/recent_tweet_search")
+@WebServlet(RoutingTable.recent_sv)
 public class TwitterRecentTweetQuery extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -35,7 +36,8 @@ public class TwitterRecentTweetQuery extends HttpServlet {
 		System.out.println("#### (1):"+searchTarget);
 		request.setAttribute("username", searchTarget);	
 		//# 遷移先画面
-		String forwardpage = "./TwitterRecentTweetResult.jsp";
+		String forwardpage = RoutingTable.recent_r;
+		System.out.println("### : Get the forward page = "+forwardpage);
 
 		//# 最終結果の格納用
 		List<Long> tweetid = new ArrayList<Long>();

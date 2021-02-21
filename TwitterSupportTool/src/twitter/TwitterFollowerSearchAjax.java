@@ -10,11 +10,9 @@ import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.User;
 import twitterapi_functions.FollowerInfo;
+import utils.RoutingTable;
 
-/**
- * Servlet implementation class TwitterServlet
- */
-@WebServlet("/follower_search2")
+@WebServlet(RoutingTable.followerV2_sv)
 public class TwitterFollowerSearchAjax extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	//#### キー認証・Twitterクラスのインスタンス生成

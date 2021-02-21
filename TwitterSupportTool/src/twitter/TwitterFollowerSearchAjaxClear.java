@@ -8,8 +8,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import twitterapi_functions.FollowerInfo;
+import utils.RoutingTable;
 
-@WebServlet("/follower_search_remove")
+@WebServlet(RoutingTable.followerV2_clear)
 public class TwitterFollowerSearchAjaxClear extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
@@ -29,8 +30,8 @@ public class TwitterFollowerSearchAjaxClear extends HttpServlet {
 		response.setHeader("Content-Type", "text/html; charset=UTF-8");
 		long[] followerid = fi.getAllFollowersId(searchTarget);
 		System.out.println("### 1: Get lenght of follower : "+followerid.length);
-		//response.getWriter().write("10");
-		response.getWriter().write(String.valueOf(followerid.length));
+		response.getWriter().write("5");
+		//response.getWriter().write(String.valueOf(followerid.length));
 		
 	}
 }

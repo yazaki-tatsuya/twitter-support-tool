@@ -17,8 +17,9 @@ import twitter4j.QueryResult;
 import twitter4j.Status;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
+import utils.RoutingTable;
 
-@WebServlet("/hashtag_search")
+@WebServlet(RoutingTable.hashtag_sv)
 public class TwitterHashTagSearch extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
@@ -35,7 +36,8 @@ public class TwitterHashTagSearch extends HttpServlet {
 		String searchTarget = "#" + request.getParameter("searchTag");
 		request.setAttribute("hashtag", searchTarget);	
 		//# 遷移先画面
-		String forwardpage = "./TwitterHashTagSearchResult.jsp";
+		String forwardpage = RoutingTable.hashtag_r;
+		System.out.println("### : Get the forward page = "+forwardpage);
 		
 		//#### ハッシュタグによる検索
 		//# ハッシュタグの検索用クラス(Query)
@@ -91,6 +93,5 @@ public class TwitterHashTagSearch extends HttpServlet {
 		//# 画面遷移
 		RequestDispatcher dispatch = request.getRequestDispatcher(forwardpage);
 		dispatch.forward(request, response);
-		//doGet(request, response);
 	}
 }

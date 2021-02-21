@@ -15,8 +15,9 @@ import twitter4j.QueryResult;
 import twitter4j.Status;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
+import utils.RoutingTable;
 
-@WebServlet("/hashtag_search_csv")
+@WebServlet(RoutingTable.hashtag_csv)
 public class TwitterHashTagSearchCsv extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

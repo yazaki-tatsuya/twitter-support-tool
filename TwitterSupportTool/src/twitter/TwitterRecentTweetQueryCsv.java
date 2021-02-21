@@ -13,8 +13,9 @@ import twitter4j.ResponseList;
 import twitter4j.Status;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
+import utils.RoutingTable;
 
-@WebServlet("/recent_tweet_search_csv")
+@WebServlet(RoutingTable.recent_csv)
 public class TwitterRecentTweetQueryCsv extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

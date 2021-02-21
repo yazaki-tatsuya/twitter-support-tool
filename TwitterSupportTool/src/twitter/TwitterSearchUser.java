@@ -14,8 +14,9 @@ import twitter4j.ResponseList;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.User;
+import utils.RoutingTable;
 
-@WebServlet("/search_user")
+@WebServlet(RoutingTable.user_sv)
 public class TwitterSearchUser extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -29,7 +30,8 @@ public class TwitterSearchUser extends HttpServlet {
 		//# 検索対象キーワードの取得
 		String searchTarget = "#" + request.getParameter("searchUser");
 		//# 遷移先画面
-		String forwardpage = "./TwitterSearchUserResult.jsp";
+		String forwardpage = RoutingTable.user_r;
+		System.out.println("### : Get the forward page = "+forwardpage);
 		//# 最終結果の格納用
 		List<String> result_name1 = new ArrayList<String>();
 		List<String> result_name2 = new ArrayList<String>();
