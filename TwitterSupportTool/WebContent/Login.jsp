@@ -1,18 +1,18 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="utils.RoutingTable" %>
 <!DOCTYPE html>
-<html class="font_1">
+<html class="font_1 background">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0" />
 <link rel="stylesheet" type="text/css" href=<%=RoutingTable.twitter_css_auth %>>
 <title>Login to Twitter Support Tool</title>
-	<img src="https://rainbow-engine.com/wp-content/uploads/Common/20200725_HeaderIcon.jpg" alt="" class="header_img"/><br /><br />
 	<center>
 	<h2 id="mokuji">Twitter Support Tool ログイン</h2>
 	</center>
 </head>
 <body>
-<form method="POST" action="j_security_check" name="loginform">
+<form method="POST" action="../CustomAuthentication" name="loginform">
 <table border="0">
 	<tr>
 		<th align="right">User:</th>
@@ -29,6 +29,7 @@
 		</td>
 	</tr>
 </table>
+<input id="origrequest" type="hidden" name="orig_request" value="<%=request.getAttribute("javax.servlet.forward.request_uri").toString().replace(request.getContextPath(), "") %>"/>
 </form>
 </body>
 </html>
