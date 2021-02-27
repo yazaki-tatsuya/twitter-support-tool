@@ -1,4 +1,4 @@
-package utils;
+package auth_util;
 
 import java.io.IOException;
 
@@ -8,6 +8,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import utils.RoutingTable;
 
 @WebServlet(RoutingTable.logout_sv)
 public class LogoutServlet1 extends HttpServlet {
