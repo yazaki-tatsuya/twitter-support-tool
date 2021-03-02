@@ -26,7 +26,7 @@ public class TwitterFollowerSearchAjaxCsv extends HttpServlet {
 		out.append("No,").append("ID,").append("ユーザーID,").append("フォロワー数,").append("ユーザー名\n");
 		
 		HttpSession session = request.getSession();
-		System.out.println("####################: "+session.getAttribute("finalstr"));
+		System.out.println("# ======== [SV②v2-CSV]: "+session.getAttribute("finalstr"));
 		
 		out.append((String)session.getAttribute("finalstr"));
 	}
