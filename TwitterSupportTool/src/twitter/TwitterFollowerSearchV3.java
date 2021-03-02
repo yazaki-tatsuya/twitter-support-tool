@@ -10,13 +10,14 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import models.FollowersList;
 import twitter4j.User;
 import twitterapi_functions.FollowerInfo;
 import utils.DbConnectUtil3;
 import utils.RoutingTable;
 
-@WebServlet(RoutingTable.follower_sv)
-public class TwitterFollowerSearch extends HttpServlet {
+@WebServlet(RoutingTable.followerV3_sv)
+public class TwitterFollowerSearchV3 extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -41,34 +42,50 @@ public class TwitterFollowerSearch extends HttpServlet {
 			//# 検索対象キーワードの取得
 			String searchTarget = request.getParameter("searchUser");
 			request.setAttribute("targetuser", searchTarget);	
-			System.out.println("# == [SV_④v1] setAttribute keyword = "+searchTarget);
+			System.out.println("# == [SV_④v3] setAttribute keyword = "+searchTarget);
 			//# 遷移先画面
-			String forwardpage = RoutingTable.follower_r;
-			System.out.println("# == [SV_④v1] Forward page : "+forwardpage);
+			String forwardpage = RoutingTable.followerV3_r;
+			System.out.println("# == [SV_④v3] Forward page : "+forwardpage);
 
 			//# 最終結果の格納用
-			List<Long> id = new ArrayList<Long>();
-			List<String> screen_name = new ArrayList<String>();
-			List<Integer> follower_count = new ArrayList<Integer>();
-			List<String> follower_name = new ArrayList<String>();
+			FollowersList fl = new FollowersList();
+			//List<Long> id = new ArrayList<Long>();
+			//List<String> screen_name = new ArrayList<String>();
+			//List<Integer> follower_count = new ArrayList<Integer>();
+			//List<String> follower_name = new ArrayList<String>();
 			
-			//# フォロワーのID一覧取得（FollowerInfoクラス）
+			//# 【※V3変更点】フォロワー情報の一括取得
+			//#  getAllFollowersInfo　→　getAllFollowersInfoV2　に変更
+			int counter = 1;
 			FollowerInfo fi = new FollowerInfo();
-			User[] followers = fi.getAllFollowersInfo(searchTarget);
+			System.out.println("==== [SV_④v3] get user START");
+			User[] followers = fi.getAllFollowersInfoV2(searchTarget);
+			System.out.println("==== [SV_④v3] get user END");
 			if(followers != null) {
 				for(User follower : followers) {
-					id.add(follower.getId());
-					screen_name.add(follower.getScreenName());
-					follower_count.add(follower.getFollowersCount());
-					follower_name.add(follower.getName());
+					if(follower != null) {
+						fl.setId(follower.getId());
+						fl.setUser(follower.getScreenName());
+						fl.setFollowerCnt(follower.getFollowersCount());
+						fl.setFollowerName(follower.getName());
+//						id.add(follower.getId());
+//						screen_name.add(follower.getScreenName());
+//						follower_count.add(follower.getFollowersCount());
+//						follower_name.add(follower.getName());
+						
+						System.out.println("====== [SV_④v3] counter = "+counter);
+						counter++;
+					}
 				}
 			}
+			
 			//####(6)結果格納・画面遷移
 			//# 結果をリクエストオブジェクトにセット
-			request.setAttribute("followersearch_1",id);
-			request.setAttribute("followersearch_2",screen_name);
-			request.setAttribute("followersearch_3",follower_count);
-			request.setAttribute("followersearch_4",follower_name);
+			request.setAttribute("FollowersList",fl);
+//			request.setAttribute("followersearch_1",id);
+//			request.setAttribute("followersearch_2",screen_name);
+//			request.setAttribute("followersearch_3",follower_count);
+//			request.setAttribute("followersearch_4",follower_name);
 			//# 画面遷移
 			RequestDispatcher dispatch = request.getRequestDispatcher(forwardpage);
 			dispatch.forward(request, response);
