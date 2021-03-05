@@ -21,7 +21,7 @@
 	<form action="./ValidationUtil" method="post">
 		@<input type="text" name="searchUserTweet" id="searchUserTweetKey">
 		<input type="submit" value="検索">
-		<input id="hid_functionid" type="hidden" name="FunctionId" value="TWRECTWQ"/>
+		<input id="hid_functionid" type="hidden" name="FunctionId" value="TWRECTWQ_v2"/>
 	</form>
 	<br />
 	<%

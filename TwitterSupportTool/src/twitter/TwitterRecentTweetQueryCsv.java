@@ -22,7 +22,7 @@ public class TwitterRecentTweetQueryCsv extends HttpServlet {
 
 		//#### キー認証・Twitterクラスのインスタンス生成
 		CommonUtil cu = new CommonUtil();
-		Twitter twitter = cu.getTwitter();
+		Twitter twitter = cu.getTwitterV2(RoutingTable.authkey_max);
 		
 		//#### 変数定義など
 		//# エンコーディング方式の設定
@@ -33,11 +33,11 @@ public class TwitterRecentTweetQueryCsv extends HttpServlet {
 
 		//# 出力結果のヘッダー作成
 		PrintWriter out = response.getWriter();
-		out.append("No.,").append("Tweet日付,").append("TweetのID,").append("いいね数,").append("リツイート数,").append("Tweet内容\n");
+		out.append("No.,").append("Tweet日付,").append("いいね数,").append("リツイート数,").append("Tweet内容,").append("TweetのID\n");
 		
 		//# 検索対象キーワードの取得
 		String searchTarget = (String) request.getSession().getAttribute("username");
-		System.out.println(searchTarget);
+		System.out.println("# ======== search target:"+searchTarget);
 
 		//# 検索結果から１Statusずつ、ツイート内容を最終結果に格納
 		//# 合計いいね数
@@ -48,14 +48,15 @@ public class TwitterRecentTweetQueryCsv extends HttpServlet {
 		int counter = 1;
 		//# ページカウンタ変数
 		int pgcount = 1;
-		
+
+		System.out.println("# ======== csv generate get Recent Tweets START");
 		//# 直近のツイートを取得
 	    try {
 	        //# 検索結果の格納用
             ResponseList<Status> statusList;	        
             do {
             	//# ページ情報の設定(ページ番号、件数)
-            	Paging pg = new Paging(pgcount,10);
+            	Paging pg = new Paging(pgcount,RoutingTable.recent_unitpage);
                 //# クエリの発行・結果格納
                 statusList = twitter.getUserTimeline(searchTarget, pg);
                 //# 取得した直近200件のタイムラインアクティビティをループ
@@ -81,10 +82,10 @@ public class TwitterRecentTweetQueryCsv extends HttpServlet {
                     	//# Contents: ツイートの内容を取得                     	
                     	out.append(counter+",");
         				out.append(formatdate+",");
-        				out.append("'"+status.getId()+",");
         				out.append(status.getFavoriteCount()+",");
         				out.append(status.getRetweetCount()+",");
-        				out.append(tmp+"\n");
+        				out.append(tmp+",");
+        				out.append("'"+status.getId()+"\n");
 
                     	//# 「累計」いいね数を更新
                         count_like = count_like + status.getFavoriteCount();
@@ -94,9 +95,11 @@ public class TwitterRecentTweetQueryCsv extends HttpServlet {
                 	}
                 }
                 pgcount++;
-            }while(statusList.size()!=0 && pgcount < 10);
+                System.out.println("# ======== [SV_③] search for page : "+pgcount);
+            }while(statusList.size()!=0 && pgcount <= RoutingTable.recent_pagelimit);
 	    }catch (TwitterException ex){
 	    	ex.printStackTrace();
-	    }				
+	    }
+	    System.out.println("# ======== csv generate get Recent Tweets END");
 	}
 }

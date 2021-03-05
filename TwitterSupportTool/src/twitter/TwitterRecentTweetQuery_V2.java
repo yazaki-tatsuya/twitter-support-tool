@@ -20,9 +20,10 @@ import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import utils.DbConnectUtil3;
 import utils.RoutingTable;
+import models.RecentTweets;
 
-@WebServlet(RoutingTable.recent_sv)
-public class TwitterRecentTweetQuery extends HttpServlet {
+@WebServlet(RoutingTable.recentV2_sv)
+public class TwitterRecentTweetQuery_V2 extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
@@ -49,19 +50,15 @@ public class TwitterRecentTweetQuery extends HttpServlet {
 			request.setCharacterEncoding("UTF-8");
 			//# 検索対象キーワードの取得
 			String searchTarget = request.getParameter("searchUserTweet");
-			System.out.println("# == [SV_③] Search Target = "+searchTarget);
+			System.out.println("# == [SV_③v2] Search Target = "+searchTarget);
 			request.setAttribute("username", searchTarget);
 			
 			//# 遷移先画面
-			String forwardpage = RoutingTable.recent_r;
-			System.out.println("# == [SV_③] Forward Page = "+forwardpage);
+			String forwardpage = RoutingTable.recentV2_r;
+			System.out.println("# == [SV_③v2] Forward Page = "+forwardpage);
 
 			//# 最終結果の格納用
-			List<Long> tweetid = new ArrayList<Long>();
-			List<String> date = new ArrayList<String>();
-			List<Integer> retcnt = new ArrayList<Integer>();
-			List<Integer> favcnt = new ArrayList<Integer>();
-			List<String> content = new ArrayList<String>();
+			RecentTweets rc = new RecentTweets();
 			
 			//# 検索結果から１Statusずつ、ツイート内容を最終結果に格納
 			//# 合計いいね数
@@ -103,11 +100,11 @@ public class TwitterRecentTweetQuery extends HttpServlet {
 	                    	//# retweet count: リツイートされた回数
 	                    	//# favorite count: いいねの数
 	                    	//# Contents: ツイートの内容を取得 
-	                    	date.add(formatdate);
-	                    	tweetid.add(status.getId());
-	                    	favcnt.add(status.getFavoriteCount());
-	                    	retcnt.add(status.getRetweetCount());
-	                    	content.add(tmp);
+	        				rc.setDate(formatdate);
+	        				rc.setTweetId(status.getId());
+	        				rc.setFavCnt(status.getFavoriteCount());
+	        				rc.setRetCnt(status.getRetweetCount());
+	        				rc.setContent(tmp);
 
 	                    	//# 「累計」いいね数を更新
 	                        count_like = count_like + status.getFavoriteCount();
@@ -115,7 +112,7 @@ public class TwitterRecentTweetQuery extends HttpServlet {
 	        	        	count_retweet = count_retweet + status.getRetweetCount();          		
 	                	}
 	                }
-	                System.out.println("# ==== [SV_③] search for page : "+pgcount);
+	                System.out.println("# ==== [SV_③v2] search for page : "+pgcount);
 	                pgcount++;
 	            }while(statusList.size()!=0 && pgcount <= RoutingTable.recent_pagelimit);
 
@@ -124,11 +121,7 @@ public class TwitterRecentTweetQuery extends HttpServlet {
 		    }
 			//####(6)結果格納・画面遷移
 			//# 結果をリクエストオブジェクトにセット
-			request.setAttribute("result1",tweetid);
-			request.setAttribute("result2",date);
-			request.setAttribute("result3",favcnt);
-			request.setAttribute("result4",retcnt);
-			request.setAttribute("result5",content);
+			request.setAttribute("RecentTweets",rc);
 		    
 			//# 画面遷移
 			RequestDispatcher dispatch = request.getRequestDispatcher(forwardpage);
