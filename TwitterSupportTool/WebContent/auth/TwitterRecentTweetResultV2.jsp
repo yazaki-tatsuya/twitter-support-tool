@@ -1,13 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ page import="java.util.List,java.util.Date,utils.RoutingTable" %>
+<%@ page import="java.util.List,java.util.Date,utils.RoutingTable,models.RecentTweets" %>
 <!DOCTYPE html>
-<% 
+<%
 String rectw_name = (String)request.getAttribute("username");
-List<Long> rectw_id = (List<Long>)request.getAttribute("result1");
-List<String> rectw_date = (List<String>)request.getAttribute("result2");
-List<Integer> rectw_fav = (List<Integer>)request.getAttribute("result3");
-List<Integer> rectw_rec = (List<Integer>)request.getAttribute("result4");
-List<String> rectw_content = (List<String>)request.getAttribute("result5");
+RecentTweets rc = (RecentTweets)request.getAttribute("RecentTweets");
+session.setAttribute("RecentTweets",request.getAttribute("RecentTweets"));
 session.setAttribute("username", request.getAttribute("username"));
 %>
 <html class="font_1 background">
@@ -28,7 +25,7 @@ session.setAttribute("username", request.getAttribute("username"));
 		<td width="150"><div class="center"><%=request.getAttribute("username") %></div></td>
 	</tr>
 </table>
-<input type="button" value="csvダウンロード（PC限定）" onclick="location.href='recent_tweet_search_csv'" style="float: left" >
+<input type="button" value="csvダウンロード（PC限定）" onclick="location.href='recent_tweet_search_csv2'" style="float: left" >
 <a href=<%=RoutingTable.home_fromauth %> style="float: right" >▶ホーム画面に戻る</a>
 <br />
 <br />
@@ -43,16 +40,16 @@ session.setAttribute("username", request.getAttribute("username"));
 		<th width="80">TweetのID</th>
 	</tr>
 	<%
-	for(int i=0; i<rectw_id.size(); i++){
-		String url_tweet = "https://twitter.com/"+rectw_name+"/status/"+rectw_id.get(i);
+	for(int i=0; i<rc.getTweetId().size(); i++){
+		String url_tweet = "https://twitter.com/"+rectw_name+"/status/"+rc.getTweetId().get(i);
 	%>
 	<tr>
 		<td><%=i+1%></td>	
-		<td><%=rectw_date.get(i) %></td>
-		<td><%=rectw_fav.get(i) %></td>
-		<td><%=rectw_rec.get(i) %></td>
-		<td><%=rectw_content.get(i) %></td>
-		<td><a href=<%=url_tweet%> target="_blank"><%=rectw_id.get(i)%></a></td>
+		<td><%=rc.getDate().get(i) %></td>
+		<td><%=rc.getFavCnt().get(i) %></td>
+		<td><%=rc.getRetCnt().get(i) %></td>
+		<td><%=rc.getContent().get(i) %></td>
+		<td><a href=<%=url_tweet%> target="_blank"><%=rc.getTweetId().get(i)%></a></td>
 	</tr>
 <%}%>
 </table>
