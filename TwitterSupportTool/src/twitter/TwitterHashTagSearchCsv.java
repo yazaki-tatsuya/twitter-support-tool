@@ -1,6 +1,7 @@
 package twitter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.text.SimpleDateFormat;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -24,7 +25,7 @@ public class TwitterHashTagSearchCsv extends HttpServlet {
 
 		//#### キー認証・Twitterクラスのインスタンス生成
 		CommonUtil cu = new CommonUtil();
-		Twitter twitter = cu.getTwitter();
+		Twitter twitter = cu.getTwitterV2(RoutingTable.authkey_max);
 		
 		//#### 変数定義など
 		//# エンコーディング方式の設定
@@ -35,18 +36,18 @@ public class TwitterHashTagSearchCsv extends HttpServlet {
 		response.setHeader("Content-Type", "text/csv; charset=SHIFT-JIS");
 		response.setHeader("Content-Disposition", "attachment; filename=\""+filename+"\"");
 		PrintWriter out = response.getWriter();
-		out.append("ユーザーID,").append("TweetのURL,").append("Tweet内容,").append("いいね数,").append("リツイート数\n");
+		out.append("ユーザーID,").append("Tweet日付").append("TweetのURL,").append("Tweet内容,").append("いいね数,").append("リツイート数\n");
 		
 		//# 検索対象キーワードの取得
 		String searchTarget = (String) request.getSession().getAttribute("hashtag_val");
-		System.out.println(searchTarget);
+		System.out.println("# ======== [csv] Generate csv START for : "+searchTarget);
 
 		//#### ハッシュタグによる検索
 		//# ハッシュタグの検索用クラス(Query)
 		Query query = new Query();
 		
 		//# クエリ生成（検索対象のワードをセット＆取得件数セット）
-		query.setCount(200);
+		query.setCount(RoutingTable.hashtag_setcount);
 		query.setQuery(searchTarget);
 		//# 検索結果の格納用
 		QueryResult queryResult = null;
@@ -72,19 +73,25 @@ public class TwitterHashTagSearchCsv extends HttpServlet {
 					String tmp_url = "<a href=\""+matcher.group()+"\" target=\"_blank\">"+matcher.group()+"</a>";
 					tmp = tmp.replace(matcher.group(),tmp_url);
 				}
-				//その他、置換が必要な文言の処理
+				//その他、置換が必要な文言の処理（csv特有処理）
 				if(tmp.contains("\"")) {tmp = tmp.replace("\"", "\"\"");}
 				if(tmp.contains(",")) {tmp = "\""+tmp+"\"";}
 				if(tmp.contains("\n")) {tmp = tmp.replace("\n","");}
 				if(tmp.contains("\r")) {tmp = tmp.replace("\r","");}
+				//####(6)日付の加工
+				String pattern2 = "yyyy-MM-dd";
+				SimpleDateFormat sdf = new SimpleDateFormat(pattern2);
+				String date_format = sdf.format(status.getCreatedAt());
 				
 				//####各要素をArrayListに追加
 				out.append(status.getUser().getScreenName()+",");
+				out.append(date_format+",");
 				out.append("'"+status.getId()+",");
 				out.append(tmp+",");
 				out.append(status.getFavoriteCount()+",");
 				out.append(status.getRetweetCount()+"\n");
 			}
-		}		
+		}
+		System.out.println("# ======== [csv] Generate csv END for : "+searchTarget);
 	}
 }
