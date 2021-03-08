@@ -32,15 +32,39 @@ th {
 	position: sticky;
 	top: 0;		
 }
+ 
+.font_1 {font-family: "ＭＳ Ｐゴシック","Roboto", arial,sans-serif;	} 
+.indent_1 {padding:0px 10px;}
+.indent_text {text-align:left}
+.indent_form {margin-left:10px;}
+.line_height {line-height: 1.5;}
 
- 
-  .font_1 {font-family: "ＭＳ Ｐゴシック","Roboto", arial,sans-serif;	} 
-  .indent_1 {padding-left:1.5em;}
-  .indent_text {text-align:left}
-  .indent_form {margin-left:10px;}
- 
- /* 20210201 Yazaki add */
- form{
+/* マーカー */
+mark {
+	background-color: skyblue; 
+	color: black;
+}
+
+/* 背景画像 */
+.background {
+	background-image: url("../image/TwitterSupportTool_BackGround.PNG");
+	/*background-color: rgba(255,255,255,0.9);*/
+	background-repeat: repeat;	
+	background-blend-mode: overlay;
+}
+
+/* テキスト寄せ（中央、右） */
+h2.center {text-align: right;}
+h3.center {text-align: right;}
+h4.center {text-align: right;}
+h2.center {text-align: center;}
+h3.center {text-align: center;}
+h4.center {text-align: center;}
+div.center {text-align: center;}
+table.center {margin-left:auto; margin-right:auto;}
+
+/* 20210201 Yazaki add */
+form{
 /*  background-color: #eaeaea;*/
   padding:0px 10px;
 }
