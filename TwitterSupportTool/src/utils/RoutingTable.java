@@ -12,24 +12,43 @@ public class RoutingTable {
 	public static final String twitter_css_auth = "../css/TwitterTool.css";
 	//# ValidationUtil
 	public static final String val_util = "/" + authzone + "/ValidationUtil";
+
+	//# APIエンドポイント（RateLimit状況検知用）
+	public static final String showUser = "/users/show/:id";
+	public static final String search = "/search/tweets";
+	public static final String searchUsers = "/users/search";
+	public static final String getUserTimeLine = "/statuses/user_timeline";
+	public static final String getFollowersList = "/followers/list";
+	public static final String getFollowersIDs = "/followers/ids";	
+	public static final String getFriendsList = "/friends/list";
+	public static final String getFriendsIDs = "/friends/ids";
+	public static final String getRetweets = "/statuses/retweets/:id";
+	public static final String getRetweeterIDs = "/statuses/retweeters/ids";
+	
 	//# API利用回数の上限（全体共通）
-	public static final int api_limit = 20;
+	public static final int api_limit = 20;		//5回位にしたい
 	//# API認証キーの最大個数
-	public static final int authkey_max = 2;	
-	//# フォロワー探索時(getFollowersList)のページ制限（単位：200）
-	public static final int pagelimit_follow200 = 10;
-	//# フォロワー探索時(getFollowersIDs)のページ制限（単位：5000）
-	public static final int pagelimit_follow5000 = 3;
-	//# フォローしてる人の探索時(getFriendsList)のページ制限（単位：200）
-	public static final int pagelimit_following200 = 10;
-	//# API利用対象のフォロワー上限抵触のしきい値（getFollowersIDs）
-	public static final int followerlimit_ids = 5000;
+	public static final int authkey_max = 1;	//Max=4
+
+	//# API利用対象のフォロワー上限抵触のしきい値（getFollowersIDs)
+	//# フォロワー探索時(getFollowersIds)のページ制限（Max単位：5000）
+	public static final int followerlimit_ids = 5000;	//(Max=5000×15=75000件/Token)
+	public static final int pagelimit_follow5000 = 3;	//(Max=15page/Token)
+	
 	//# API利用対象のフォロワー上限抵触のしきい値（getFollowersLists）
-	public static final int followerlimit_lists = 500;
+	//# フォロワー探索時(getFollowersList)ページ制限（Max単位：200）
+	public static final int followerlimit_lists = 500;	//(Max=200×15=3000件/Token)
+	public static final int pagelimit_follow200 = 4;	//(Max=15page/Token)
+	public static final int unitpage_follow200 = 10;	//(Max=200/Token)
+	
 	//# API利用対象のフォローしてる人上限抵触のしきい値（getFriedsLists）
-	public static final int friendslimit_lists = 500;
+	//# フォロー探索時(getFriendsList)ページ制限（Max単位：200）
+	public static final int friendslimit_lists = 500;	//(Max=200×15=3000件/Token)
+	public static final int pagelimit_following200 = 4;//(Max=15page/Token)
+	public static final int unitpage_following200 = 10;	//(Max=200/Token)
+	
 	//# API利用対象のリツイート数限抵触のしきい値
-	public static final int retweetcountlimit = 100;
+	public static final int retweetcountlimit = 100;	//(Max=100件/Token)
 
 	//## 画面
 	//# ホーム画面・ログイン系画面
@@ -39,20 +58,15 @@ public class RoutingTable {
 	public static final String logout_sv_homebtn = "auth/LogoutServlet1";	
 	public static final String logout_r = "/Logout1.jsp";
 	
-	//# (０１)ハッシュタグによるTweet検索
-	public static final int hashtag_setcount = 100; //MAX１００件
-	public static final String hashtag_q = authzone + "/TwitterHashTagSearchQuery.jsp";
-	public static final String hashtag_sv = "/" + authzone + "/hashtag_search";
-	public static final String hashtag_r = "TwitterHashTagSearchResult.jsp";
-	public static final String hashtag_csv = "/" + authzone + "/hashtag_search_csv";
-	
 	//# (０１)ハッシュタグによるTweet検索_V2
-	public static final String hashtagV2_q = authzone + "/TwitterHashTagSearchWithFavQuery.jsp";
+	public static final String hashtagV2_q = authzone + "/TwitterHashTagSearchQueryV2.jsp";
 	public static final String hashtagV2_sv = "/" + authzone + "/hashtag_search_with_fav";
-	public static final String hashtagV2_r = "TwitterHashTagSearchWithFavResult.jsp";
+	public static final String hashtagV2_r = "TwitterHashTagSearchResultV2.jsp";
 	public static final String hashtagV2_csv = "/" + authzone + "/hashtag_search_csv2";
-	//# 複数ページを繰り返し検索しているので、その繰り返し回数（1page＝Max100件）
-	public static final int hashtagV2_pagelimit = 2;
+	//# 複数ページを繰り返し検索しているので、その繰り返し回数
+	public static final int hashtagV2_pagelimit = 2; //(MAX=N×100=XXX件）
+	//# MAX件数
+	public static final int hashtag_setcount = 100; //(MAX=100件)
 	
 	//# (０２)○○に関連するユーザー検索
 	public static final String user_q = authzone + "/TwitterSearchUserQuery.jsp";
@@ -60,48 +74,33 @@ public class RoutingTable {
 	public static final String user_r = "TwitterSearchUserResult.jsp";
 	public static final String user_csv = "/" + authzone + "/search_user_csv";
 	//# 複数ページを繰り返し検索しているので、その繰り返し回数（1page＝20件）
-	public static final int user_pagelimit = 3;	
+	public static final int user_pagelimit = 3;
 
 	//# (０３)○○さんの直近Tweet検索(Model使用＆csvのAPI消費抑止版)
 	public static final String recentV2_q = authzone + "/TwitterRecentTweetQueryV2.jsp";
 	public static final String recentV2_sv = "/" + authzone + "/recent_tweet_search2";
 	public static final String recentV2_r = "TwitterRecentTweetResultV2.jsp";
-	public static final String recentV2_csv = "/" + authzone + "/recent_tweet_search_csv2";
-	//# (０３)○○さんの直近Tweet検索
-	public static final String recent_q = authzone + "/TwitterRecentTweetQuery.jsp";
-	public static final String recent_sv = "/" + authzone + "/recent_tweet_search";
-	public static final String recent_r = "TwitterRecentTweetResult.jsp";
-	public static final String recent_csv = "/" + authzone + "/recent_tweet_search_csv";
+	public static final String recentV2_csv = "/" + authzone + "/recent_tweet_search_csv2";	
 	//# 複数ページを繰り返し検索しているので、その繰り返し回数（1page＝user_unitpage件）
 	public static final int recent_pagelimit = 3;
 	//# １ページ当たりの取得件数
 	public static final int recent_unitpage = 20;
 	
 	//# (０４)○○さんのフォロワー検索 (Ver.4 : Ajax＋API使用回数抑止版)
-	public static final String followerV2_sv_new = "/" + authzone + "/follower_search4";
+	public static final String followerV4_q = authzone + "/TwitterGetFollowerQueryV2.jsp";
+	public static final String followerV2_js = "../js/TwitterGetFollower6.js";
+	public static final String followerV4_clear = "/" + authzone + "/follower_search_remove";
+	public static final String followerV4_sv = "/" + authzone + "/follower_search4";
+	//public static final String followerV4_r = "[なし（AjaxでQuery画面に直接表示するため）]";
+	public static final String followerV4_csv = "/" + authzone + "/follower_search_csv";
 	
 	//# (０４)○○さんのフォロワー検索（Ver.3 : getFollowersList版）
 	//# getFollowersIDs→showUserの流れではなく、getFollowersListで一回で取得
 	public static final String followerV3_q = authzone + "/TwitterGetFollowerQueryV3.jsp";
 	public static final String followerV3_sv = "/" + authzone + "/follower_search3";
-	public static final String followerV3_r = "TwitterGetFollowerResult.jsp";
+	public static final String followerV3_r = "TwitterGetFollowerResultV3.jsp";
 	public static final String followerV3_csv = "/" + authzone + "/follower_search_csv3";
-	
-	//#【NG：性能問題】 (０４)○○さんのフォロワー検索 (Ver.2 : Ajax版)
-	//# showUserを大量にコールするため、遅い＆即座にRateLimitExceedになってしまう
-	public static final String followerV2_q = authzone + "/TwitterGetFollowerQueryV2.jsp";
-	public static final String followerV2_js = "../js/TwitterGetFollower6.js";
-	public static final String followerV2_clear = "/" + authzone + "/follower_search_remove";
-	public static final String followerV2_sv = "/" + authzone + "/follower_search2";
-	public static final String followerV2_r = "TwitterGetFollowerResult.jsp";
-	public static final String followerV2_csv = "/" + authzone + "/follower_search_csv";
-	
-	//# 【NG：性能問題】(０４)○○さんのフォロワー検索（Ver.1 : 初代バージョン）
-	//# showUserを大量にコールするため、遅い＆即座にRateLimitExceedになってしまう
-	public static final String follower_q = authzone + "/TwitterGetFollowerQuery.jsp";
-	public static final String follower_sv = "/" + authzone + "/follower_search";
-	public static final String follower_r = "TwitterGetFollowerResult.jsp";
-	
+		
 	//# (０５)ツイートにRetweetした人の一覧出力
 	public static final String retweet_q = authzone + "/TwitterRetweeterListQuery.jsp";
 	public static final String retweet_sv = "/" + authzone + "/retweeter_list";
