@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" %>
 <%@ page import="java.util.List,utils.RoutingTable" %>
-<%@ page import="twitter4j.User,twitter.CommonUtil,twitterapi_functions.FollowerInfo" %>
+<%@ page import="twitter4j.User,twitter.CommonUtil,functions.FollowerInfo" %>
 <!DOCTYPE html>
 <html class="font_1 background">
 <head>

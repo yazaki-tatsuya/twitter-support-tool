@@ -10,11 +10,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import functions.FollowerInfo;
+import functions.FollowingInfo;
+import functions.RetweeterInfo;
 import utils.RoutingTable;
 import javax.servlet.RequestDispatcher;
-import twitterapi_functions.FollowerInfo;
-import twitterapi_functions.FollowingInfo;
-import twitterapi_functions.RetweeterInfo;
 
 @WebServlet(RoutingTable.val_util)
 public class ValidationUtil extends HttpServlet {
@@ -29,13 +29,10 @@ public class ValidationUtil extends HttpServlet {
 		String func = request.getParameter("FunctionId");
 		System.out.println("# == [Validation] Get Function Id:"+func);
 		//# 対象画面のバリデーションを実施		
-		if(func.equals("TWHTSRCH")) {TWHTSRCH_Validate(request,response);}
 		//# (０１)ハッシュタグによるTweet検索_V2
-		if(func.equals("TWFAVSCH")) {TWFAVSCH_Validate(request,response);}
+		if(func.equals("TWHTSRCH_v2")) {TWHTSRCH_Validate_V2(request,response);}
 		//# (０２)○○に関連するユーザー検索
 		if(func.equals("TWSCHUSR")) {TWSCHUSR_Validate(request,response);}
-		//# (０３)○○さんの直近Tweet検索
-		if(func.equals("TWRECTWQ")) {TWRECTWQ_Validate(request,response);}
 		//# (０３)○○さんの直近Tweet検索_V2
 		if(func.equals("TWRECTWQ_v2")) {TWRECTWQ_Validate_V2(request,response);}
 		//# (０４)○○さんのフォロワー検索_V3
@@ -108,7 +105,7 @@ public class ValidationUtil extends HttpServlet {
 			}
 		}
 		buf.append("</ul>");
-		System.out.println("#### Error Message: "+buf.toString());
+		System.out.println("# == [Validation] Error Message: "+buf.toString());
 		return buf.toString();
 	}
 
@@ -116,49 +113,16 @@ public class ValidationUtil extends HttpServlet {
 	public boolean hasErrors() {
 		return !this.errs.isEmpty();
 	}
-	
-	//# (０１)ハッシュタグによるTweet検索
-	public void TWHTSRCH_Validate(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		errs = new ArrayList<String>();
-		errs.clear();
-		//# 必須入力項目のチェックを実行
-		//# (空なら「[項目名] is a mandatory～」のメッセージArrayListに格納)
-		requiredCheck(request.getParameter("searchTag"),"ハッシュタグ");
-		//# エラーある場合
-		if(hasErrors()) {
-			//# エラーメッセージをリクエストの属性としてセット
-			request.setAttribute("error_msg", getErrorList());
-			//# エラーメッセージを表示するため、再び項目の入力画面に戻る
-			String nextpage= "/" + RoutingTable.hashtag_q;
-			//String nextpage="/TwitterHashTagSearchWithFavQuery.jsp";
-			RequestDispatcher rd = getServletContext().getRequestDispatcher(nextpage);
-			rd.forward(request, response);
-		}
-		//# エラーない場合
-		else {
-			System.out.println("# == 必須チェックを通過 ");
-			//# 次画面に渡すために再度パラメタを同名でセット
-			//# formの値(getParameter)をsessionに保存(setAttribute)
-			HttpSession session = request.getSession();
-			session.setAttribute("searchTag", request.getParameter("searchTag"));		
-			System.out.println("# == setAttribute searchTag : "+request.getParameter("searchTag"));
-			//# バリデーションに問題がなければ次画面へ遷移
-			String nextpage = RoutingTable.hashtag_sv;
-			//String nextpage="/hashtag_search_with_fav";
-			RequestDispatcher rd = getServletContext().getRequestDispatcher(nextpage);
-			rd.forward(request, response);
-		}
-	}
 
 	//# (０１)ハッシュタグによるTweet検索_V2
-	public void TWFAVSCH_Validate(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	public void TWHTSRCH_Validate_V2(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		errs = new ArrayList<String>();
 		errs.clear();
 		//# 必須入力項目のチェックを実行
 		//# (空なら「[項目名] is a mandatory～」のメッセージArrayListに格納)
 		requiredCheck(request.getParameter("searchTag"),"ハッシュタグ");
 		requiredCheck(request.getParameter("searchFav"),"いいね数");
-		System.out.println("# == バリデーション対象 HashTag : "+request.getParameter("searchTag")+" FavCount: "+request.getParameter("searchFav"));
+		System.out.println("# == [Validation] バリデーション対象 HashTag : "+request.getParameter("searchTag")+" FavCount: "+request.getParameter("searchFav"));
 		//# エラーある場合
 		if(hasErrors()) {
 			//# エラーメッセージをリクエストの属性としてセット
@@ -170,7 +134,7 @@ public class ValidationUtil extends HttpServlet {
 		}
 		//# エラーない場合
 		else {
-			System.out.println("# == 必須チェックを通過 ");
+			System.out.println("# == [Validation] 必須チェックを通過 ");
 			//# 次画面に渡すために再度パラメタを同名でセット
 			//# formの値(getParameter)をsessionに保存(setAttribute)
 			HttpSession session = request.getSession();
@@ -207,36 +171,6 @@ public class ValidationUtil extends HttpServlet {
 			session.setAttribute("searchUser", request.getParameter("searchUser"));
 			//# バリデーションに問題がなければ次画面へ遷移
 			String nextpage = RoutingTable.user_sv;
-			//String nextpage="/hashtag_search_with_fav";
-			RequestDispatcher rd = getServletContext().getRequestDispatcher(nextpage);
-			rd.forward(request, response);
-		}
-	}
-
-	//# (０３)○○さんの直近Tweet検索
-	public void TWRECTWQ_Validate(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		errs = new ArrayList<String>();
-		errs.clear();
-		//# 必須入力項目のチェックを実行
-		//# (空なら「[項目名] is a mandatory～」のメッセージArrayListに格納)
-		requiredCheck(request.getParameter("searchUserTweet"),"ユーザーID");
-		//# エラーある場合
-		if(hasErrors()) {
-			//# エラーメッセージをリクエストの属性としてセット
-			request.setAttribute("error_msg", getErrorList());
-			//# エラーメッセージを表示するため、再び項目の入力画面に戻る
-			String nextpage= "/" + RoutingTable.recent_q;
-			//String nextpage="/TwitterHashTagSearchWithFavQuery.jsp";
-			RequestDispatcher rd = getServletContext().getRequestDispatcher(nextpage);
-			rd.forward(request, response);
-		}
-		//# エラーない場合
-		else {
-			//# 次画面に渡すために再度パラメタを同名でセット
-			HttpSession session = request.getSession();
-			session.setAttribute("searchUserTweet", request.getParameter("searchUserTweet"));		
-			//# バリデーションに問題がなければ次画面へ遷移
-			String nextpage = RoutingTable.recent_sv;
 			//String nextpage="/hashtag_search_with_fav";
 			RequestDispatcher rd = getServletContext().getRequestDispatcher(nextpage);
 			rd.forward(request, response);

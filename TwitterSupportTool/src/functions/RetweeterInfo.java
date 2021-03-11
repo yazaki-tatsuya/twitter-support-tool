@@ -1,4 +1,4 @@
-package twitterapi_functions;
+package functions;
 
 import java.util.List;
 

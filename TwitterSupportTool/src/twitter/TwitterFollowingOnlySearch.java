@@ -1,8 +1,5 @@
 package twitter;
 import java.io.IOException;
-import java.util.List;
-import java.util.*;
-
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -10,10 +7,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import functions.FollowerInfo;
+import functions.FollowingInfo;
 import models.FollowingOnly;
 import twitter4j.User;
-import twitterapi_functions.FollowerInfo;
-import twitterapi_functions.FollowingInfo;
 import utils.DbConnectUtil3;
 import utils.RoutingTable;
 
