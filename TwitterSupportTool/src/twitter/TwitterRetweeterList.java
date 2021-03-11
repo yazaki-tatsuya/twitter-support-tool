@@ -1,10 +1,6 @@
 package twitter;
 import java.io.IOException;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.util.*;
-
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -12,15 +8,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import functions.FollowerInfo;
+import functions.RetweeterInfo;
 import models.RetweetersList;
-import twitter4j.Query;
-import twitter4j.QueryResult;
 import twitter4j.Status;
-import twitter4j.Twitter;
-import twitter4j.TwitterException;
-import twitter4j.User;
-import twitterapi_functions.FollowerInfo;
-import twitterapi_functions.RetweeterInfo;
 import utils.DbConnectUtil3;
 import utils.RoutingTable;
 

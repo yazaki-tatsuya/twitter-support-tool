@@ -1,12 +1,12 @@
-package twitterapi_functions;
+package functions;
 
+import functions.FollowerInfo;
+import models.FollowerInfoAjaxNextBatch;
 import twitter.CommonUtil;
 import twitter4j.IDs;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.User;
-import twitterapi_functions.FollowerInfo;
-import twitterapi_functions.FollowerInfoAjaxNextBatch;
 import utils.RoutingTable;
 
 public class FollowerInfoAjax {
@@ -40,7 +40,7 @@ public class FollowerInfoAjax {
 				//# ③繰り返しページを取得
 				do {
 					//# 次の5000件のフォロワーを取得
-					followerIDs = twitter.getFollowersIDs(user.getScreenName(),cursor,25);
+					followerIDs = twitter.getFollowersIDs(user.getScreenName(),cursor,RoutingTable.unitpage_follow200);
 					long[] temp_ids = followerIDs.getIDs();
 					//# 5000件を中間配列(ids)にコピー
 					System.arraycopy(temp_ids, 0, ids, place, temp_ids.length);
@@ -49,7 +49,7 @@ public class FollowerInfoAjax {
 					System.out.println("# ======== [Function] page="+counter+" @@@ counter="+place);
 					//# 次ページにインクリメント
 					counter++;
-				} while((cursor = followerIDs.getNextCursor())!=0 && counter<4);
+				} while((cursor = followerIDs.getNextCursor())!=0 && counter<RoutingTable.pagelimit_follow200);
 			}
 			//# 中間配列は余分に確保しているので、最終配列適切な長さにして再度格納
 			final_ids = new long[place];

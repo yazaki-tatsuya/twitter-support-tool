@@ -1,4 +1,4 @@
-package twitterapi_functions;
+package functions;
 
 import twitter.CommonUtil;
 import twitter4j.IDs;
@@ -69,7 +69,7 @@ public class FollowerInfo {
 				//# ③フォロワーの一覧を取得
 				do {
 					//# 次のN件のフォロワーを取得
-					temp_users = twitter.getFollowersList(UserId,cursor,200);
+					temp_users = twitter.getFollowersList(UserId,cursor,RoutingTable.unitpage_following200);
 					//# N件を最終Array(users)に追加
 					for(User temp_user : temp_users) {
 						users[loopnum] = temp_user;

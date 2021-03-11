@@ -1,4 +1,4 @@
-package twitterapi_functions;
+package models;
 
 public class FollowerInfoAjaxNextBatch {
 	private long[] next_ids = null;

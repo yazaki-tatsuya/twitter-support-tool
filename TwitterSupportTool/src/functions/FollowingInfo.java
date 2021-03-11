@@ -1,4 +1,4 @@
-package twitterapi_functions;
+package functions;
 
 import twitter.CommonUtil;
 import twitter4j.PagableResponseList;
