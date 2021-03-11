@@ -35,7 +35,7 @@
 		<th width="760">説明</th>
 	</tr>
 	<tr>
-	<td><p><a href=<%=RoutingTable.hashtagV2_q %>>TWFAVSCH</a></p></td>
+	<td><p><a href=<%=RoutingTable.hashtagV2_q %>>TWHTSRCH_v2</a></p></td>
 		<td>ハッシュタグ&#x0023;&#x20e3;によるTweet検索<br />（＋いいね数&#x1f44d;の指定機能付き）</td>
 		<td>指定した「ハッシュタグ&#x0023;&#x20e3;」に関連する「ツイート&#x1f4ac;」を検索できます（いいね数&#x1f44d;の指定が可能）</td>
 	</tr>
@@ -69,7 +69,7 @@
 	</tr>
 </table>
 <br /><br />
-<h3>【旧バージョン】</h3>
+<h3>【調整中】</h3>
 <table border="1" width="100%">
 	<tr>
 		<th width="120">機能ID</th>
@@ -77,27 +77,10 @@
 		<th width="780">説明</th>
 	</tr>
 	<tr>
-		<td><p><a href=<%=RoutingTable.hashtag_q %>>TWHTSRCH</a></p></td>
-		<td>ハッシュタグ&#x0023;&#x20e3;によるTweet検索</td>
-		<td>指定した「ハッシュタグ&#x0023;&#x20e3;」に関連する「ツイート&#x1f4ac;」を検索できます。</td>
-	</tr>
-	<tr>
-		<td><p><a href=<%=RoutingTable.recent_q %>>TWRECTWQ</a></p></td>
-		<td>○○さん&#x1f466;&#x1f467;の直近ツイート&#x1f4ac;検索</td>
-		<td>指定した「ユーザーID&#x1f194;」の直近のツイート&#x1f4ac;を取得できます。</td>
-	</tr>
-	<%-- 性能問題があるため使用しない。非同期処理をするv2の方を利用する --%>
-	<tr>
-		<td><p><a href=<%=RoutingTable.followerV2_q %>>TWFLWQUE_v2</a></p></td>
-		<td>○○さん&#x1f466;&#x1f467;のフォロワー&#x1f46b;検索(Ver.2)</td>
+		<td><p><a href=<%=RoutingTable.followerV4_q %>>TWFLWQUE_v4</a></p></td>
+		<td>○○さん&#x1f466;&#x1f467;のフォロワー&#x1f46b;検索(Ver.4)</td>
 		<td>指定した「ユーザーID&#x1f194;」のフォロワー&#x1f46b;の一覧を取得できます。</td>
-	</tr>
-	<tr>
-		<td><p><a href=<%=RoutingTable.follower_q %>>TWFLWQUE</a></p></td>
-		<td>○○さん&#x1f466;&#x1f467;のフォロワー&#x1f46b;検索</td>
-		<td>指定した「ユーザーID&#x1f194;」のフォロワー&#x1f46b;の一覧を取得できます。</td>
-	</tr>
-	
+	</tr>	
 </table>
 </form>
 <br /><br />

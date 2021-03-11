@@ -1,11 +1,8 @@
 package twitter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.*;
-
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -23,7 +20,7 @@ import utils.DbConnectUtil3;
 import utils.RoutingTable;
 
 @WebServlet(RoutingTable.hashtagV2_sv)
-public class TwitterHashTagSearchWithFav extends HttpServlet {
+public class TwitterHashTagSearch_V2 extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
@@ -55,7 +52,7 @@ public class TwitterHashTagSearchWithFav extends HttpServlet {
 			
 			//# 遷移先画面
 			String forwardpage = RoutingTable.hashtagV2_r;
-			System.out.println("# == [SV] Forward page : "+forwardpage);
+			System.out.println("# == [SV_①v2] Forward page : "+forwardpage);
 
 			//#### ハッシュタグによる検索
 			//# ハッシュタグの検索用クラス(Query)
@@ -126,13 +123,13 @@ public class TwitterHashTagSearchWithFav extends HttpServlet {
 					e.printStackTrace();
 				}
 				counter++;
-				System.out.println("# ==== [SV] searching tweet of page : "+counter);
+				System.out.println("# ==== [SV_①v2] searching tweet of page : "+counter);
 			}while((query = queryResult.nextQuery())!=null && counter<RoutingTable.hashtagV2_pagelimit);
 			//#### 結果格納・画面遷移
 			//# 検索キーをセッションに保存（次画面で使用）
 			request.setAttribute("hashtag", searchTarget);
 			request.setAttribute("favcount", favcount);	
-			System.out.println("# == [SV] setAttribute hashtag : "+request.getParameter("searchTag")+" FavCount: "+request.getParameter("searchFav"));
+			System.out.println("# == [SV_①v2] setAttribute hashtag : "+request.getParameter("searchTag")+" FavCount: "+request.getParameter("searchFav"));
 			
 			//# 結果をリクエストオブジェクトにセット
 			request.setAttribute("HashTagSearchList",ht);

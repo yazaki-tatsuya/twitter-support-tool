@@ -37,7 +37,7 @@ if(request.getParameter("searchFav")!=null){fav=request.getParameter("searchFav"
 		</tr>
 	</table><br />
 	<input type="submit" value="検索">
-	<input id="hid_functionid" type="hidden" name="FunctionId" value="TWFAVSCH"/>	
+	<input id="hid_functionid" type="hidden" name="FunctionId" value="TWHTSRCH_v2"/>	
 	</form>
 	<br />
 	<%
