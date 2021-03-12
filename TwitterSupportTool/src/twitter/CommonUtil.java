@@ -45,8 +45,8 @@ public class CommonUtil {
 		finalnum = (min + (int)(random*(adjmax-min)));
 		//System.out.println("# [Authentication] Calculate >>>>>>>>>>>> min="+min+" max="+adjmax+" random="+random+" (int)(random*(adjmax-min))="+(int)(random*(adjmax-min)));
 		System.out.println("# [Authentication] Token Number : "+finalnum);
-		return String.valueOf(4);
-		//return String.valueOf(finalnum);
+		//return String.valueOf(4);
+		return String.valueOf(finalnum);
 	}
 	
 	//# 引数に応じて動的に認証キーを取得
