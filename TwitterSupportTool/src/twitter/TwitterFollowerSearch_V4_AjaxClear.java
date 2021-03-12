@@ -7,11 +7,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import twitterapi_functions.FollowerInfo;
+import functions.FollowerInfo;
 import utils.RoutingTable;
 
-@WebServlet(RoutingTable.followerV2_clear)
-public class TwitterFollowerSearchAjaxClear extends HttpServlet {
+@WebServlet(RoutingTable.followerV4_clear)
+public class TwitterFollowerSearch_V4_AjaxClear extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
 	//# フォロワーのID一覧取得用（FollowerInfoクラス）
