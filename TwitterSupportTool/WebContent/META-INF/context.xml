@@ -18,7 +18,7 @@
 				auth="Container"
 				type="javax.sql.DataSource"
 				username="TWITTERTOOLUSR"
-				password="xxxxx"
+				password="xxxx"
 				driverClassName="oracle.jdbc.OracleDriver"
 				url="jdbc:oracle:thin:@tk2-262-40837.vs.sakura.ne.jp:1521:ORCL"
 				maxWait="5000"
