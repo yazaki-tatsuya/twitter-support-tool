@@ -6,17 +6,17 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
+import functions.FollowerInfoAjax;
+import models.FollowerInfoAjaxNextBatch;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.User;
-import twitterapi_functions.FollowerInfo;
-import twitterapi_functions.FollowerInfoAjax;
-import twitterapi_functions.FollowerInfoAjaxNextBatch;
 import utils.DbConnectUtil3;
 import utils.RoutingTable;
 
-@WebServlet(RoutingTable.followerV2_sv_new)
-public class TwitterFollowerSearchAjax_V2 extends HttpServlet {
+@WebServlet(RoutingTable.followerV4_sv)
+public class TwitterFollowerSearch_V4_Ajax extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	//#### キー認証・Twitterクラスのインスタンス生成
 	CommonUtil cu = new CommonUtil();
@@ -45,6 +45,7 @@ public class TwitterFollowerSearchAjax_V2 extends HttpServlet {
 		//# ループカウンタの値を取得
 		int counter = Integer.parseInt(request.getParameter("Number"));
 		int total = Integer.parseInt(request.getParameter("Total"));
+		int batchnum = RoutingTable.unitpage_follow200 * RoutingTable.pagelimit_follow200;
 		
 		//# 検索対象ユーザーのフォロワ一覧取得(v2)
 		//# ↓getAllFollowersId内のgetFollowersIDsは15回/15分の制限あり
@@ -54,16 +55,16 @@ public class TwitterFollowerSearchAjax_V2 extends HttpServlet {
 		//# v4では制限回避のため、セッションに保存して値を使いまわす
 		//# カーソルの値を取得
 		long cursor = -1L;
-		//# 初回でない and バッチの区切り目である
-		if(counter!=0 && counter%100==0) {
+		//# 初回でない and バッチの区切り目である → カーソルの値を取得
+		if(counter!=0 && counter%batchnum==0) {
 			cursor = (long) session.getAttribute("cursor");
 		}
-		System.out.println("# == [SV_④v4] Check cursor : "+cursor);
+		//System.out.println("# == [SV_④v4] Check cursor : "+cursor);
 		
 		//# 次のユーザIDの束（バッチ）を取得　or　保存してた途中のバッチを取得
 		long[] followerids = null;
 		//# バッチの区切り目（バッチ単位数で割り切れる）の場合
-		if(counter%100==0) {
+		if(counter%batchnum==0) {
 			System.out.println("# ==== [SV_④v4] Get next batch START");
 			//# 初回 or バッチの最後に到達したので新しいバッチを取得
 			FollowerInfoAjaxNextBatch finb = new FollowerInfoAjaxNextBatch();
@@ -75,23 +76,23 @@ public class TwitterFollowerSearchAjax_V2 extends HttpServlet {
 			System.out.println("# ==== [SV_④v4] Get next batch END");
 		}else {
 			//# セッションに保存していたバッチ情報を取得
-			System.out.println("# ==== [SV_④v4] Reuse current batch START");
+			//System.out.println("# ==== [SV_④v4] Reuse current batch START");
 			followerids = (long[]) session.getAttribute("batch");
-			System.out.println("# ==== [SV_④v4] Reuse current batch END");
+			//System.out.println("# ==== [SV_④v4] Reuse current batch END");
 		}
 
 		
 		System.out.println("# == [SV_④v4] Counter status check cnt="+counter+" total="+total);
 		//# フォロワー数＝カウンタ数（ラスト１回）に辿り着いたらAPI利用回数更新
-		if(counter==total) {
-			System.out.println("# ==== [SV_④v4] Counter Reachd Total cnt="+counter+" total="+total);
+		if(counter==(total-1)) {
+			System.out.println("# ======== [SV_④v4] FINISH : counter="+counter+" total="+total);
 			//# DB接続・API利用回数更新
 			db.DbUpdateApiUseCount(request.getRemoteUser());
 			db.DbClose();
 		}
 		//# 結果画面で取得できるようsetAttribute
 		request.setAttribute("targetuser", searchTarget);
-		System.out.println("# == [SV_④v4] Check Target : "+searchTarget+" Loop Num: "+counter);
+		//System.out.println("# == [SV_④v4] Check Target : "+searchTarget+" Loop Num: "+counter);
 		
 		//# i番目のフォロワー格納用
 		User follower = null;
@@ -101,7 +102,7 @@ public class TwitterFollowerSearchAjax_V2 extends HttpServlet {
 			//# counterは全フォロワー数のカーソルに対して
 			//# followeridsのサイズはバッチ単位なので
 			//# counter%[バッチサイズ]する事でOutOfBoundExceptionを抑止
-			int tmp_counter = counter%100;
+			int tmp_counter = counter%batchnum;
 			//# i番目のフォロワー情報を取得
 			follower = twitter.showUser(followerids[tmp_counter]);
 			//# 返却用の<table>行を生成
@@ -117,11 +118,17 @@ public class TwitterFollowerSearchAjax_V2 extends HttpServlet {
 			tempstr = tempstr + follower.getId()+","+follower.getScreenName()+","+follower.getFollowersCount()+","+follower.getName()+"\n";
 			//# 次のターンで取り出せるようにセッションに格納
 			session.setAttribute("finalstr", tempstr);
-			System.out.println("# ==== [SV_④v4] Check No."+counter+" tempstr : ");			
+			//System.out.println("# ==== [SV_④v4] Check No."+counter+" tempstr : ");			
 		} catch (TwitterException e) {
 			e.printStackTrace();
 		}	
 		response.getWriter().write(out0+out1+out2+out3+out4);
-		System.out.println("# ====== [SV_④v4] Get temp result"+out0+out1+out2+out3+out4);
+		//System.out.println("# ====== [SV_④v4] Get temp result"+out0+out1+out2+out3+out4);
+		//# 0.5秒待つ
+		try {
+			Thread.sleep(0);				
+		}catch(InterruptedException e){
+			e.printStackTrace();
+		}
 	}
 }

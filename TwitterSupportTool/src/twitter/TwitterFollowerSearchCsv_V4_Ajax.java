@@ -10,8 +10,8 @@ import javax.servlet.http.HttpSession;
 
 import utils.RoutingTable;
 
-@WebServlet(RoutingTable.followerV2_csv)
-public class TwitterFollowerSearchAjaxCsv extends HttpServlet {
+@WebServlet(RoutingTable.followerV4_csv)
+public class TwitterFollowerSearchCsv_V4_Ajax extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -23,10 +23,10 @@ public class TwitterFollowerSearchAjaxCsv extends HttpServlet {
 		response.setHeader("Content-Type", "text/csv; charset=SHIFT-JIS");
 		response.setHeader("Content-Disposition", "attachment; filename=\""+filename+"\"");
 		PrintWriter out = response.getWriter();
-		out.append("No,").append("ID,").append("ユーザーID,").append("フォロワー数,").append("ユーザー名\n");
+		out.append("ID,").append("ユーザーID,").append("フォロワー数,").append("ユーザー名\n");
 		
 		HttpSession session = request.getSession();
-		System.out.println("# ======== [SV②v2-CSV]: "+session.getAttribute("finalstr"));
+		System.out.println("# ======== [SV②v4-CSV]: "+session.getAttribute("finalstr"));
 		
 		out.append((String)session.getAttribute("finalstr"));
 	}

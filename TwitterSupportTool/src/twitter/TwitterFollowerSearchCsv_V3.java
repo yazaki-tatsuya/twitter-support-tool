@@ -8,11 +8,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import models.FollowersList;
-import models.FollowingOnly;
 import utils.RoutingTable;
 
 @WebServlet(RoutingTable.followerV3_csv)
-public class TwitterFollowerSearchCsv extends HttpServlet {
+public class TwitterFollowerSearchCsv_V3 extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
