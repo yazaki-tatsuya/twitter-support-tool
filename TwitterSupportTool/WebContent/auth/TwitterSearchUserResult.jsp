@@ -30,7 +30,7 @@ session.setAttribute("keyword_val", request.getAttribute("keyword"));
 </table>
 <br />
 <input type="button" value="csvダウンロード（PC限定）" onclick="location.href='search_user_csv'" style="float: left" >
-<a href=<%=RoutingTable.home_fromauth %> style="float: right" >▶ホーム画面に戻る</a>
+<a href=<%=RoutingTable.home_fromauth %> style="float: right" >▶ホーム画面に戻る</a><br /><br />
 <table border="1" width="100%">
 	<tr>
 		<th width="25">No.</th>
