@@ -14,12 +14,13 @@ public class FollowerInfoAjax {
 	//# [共通]キー認証・Twitterクラスのインスタンス生成
 	static CommonUtil cu = new CommonUtil();
 	static Twitter twitter = cu.getTwitterV2(RoutingTable.authkey_max);
+	FollowerInfo fi = new FollowerInfo();
 	
 	//# (E)指定したユーザIDの全フォロワー情報を一括取得	
 	public FollowerInfoAjaxNextBatch getNextFollowersSet(String UserId,long cursor,int i1) {
 	    System.out.println("# ======== [Function] check args (1)cursor="+cursor+" (2)i1="+i1);
 		//# フォロワー情報格納用（中間）
-        long[] ids = new long[FollowerInfo.getFollowerCount(UserId)];
+        long[] ids = new long[fi.getFollowerCount(UserId)];
         //# フォロワー情報格納用（最終）
         long[] final_ids = null;
         //# 最終返却結果の格納オブジェクトをインスタンス化
