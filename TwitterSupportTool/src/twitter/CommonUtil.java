@@ -6,6 +6,7 @@ import java.util.Map;
 import twitter4j.Twitter;
 import twitter4j.TwitterFactory;
 import twitter4j.conf.ConfigurationBuilder;
+import utils.GetRateLimit;
 
 public class CommonUtil {
 
@@ -34,7 +35,14 @@ public class CommonUtil {
 		authkeys.put("ConsumerKey4","");
 		authkeys.put("ConsumerSecret4","");
 		authkeys.put("AccessToken4","");
-		authkeys.put("AccessTokenSecret4","");	
+		authkeys.put("AccessTokenSecret4","");
+
+		//# (5)ez_Aaon
+		authkeys.put("ConsumerKey5","");
+		authkeys.put("ConsumerSecret5","");
+		authkeys.put("AccessToken5","");
+		authkeys.put("AccessTokenSecret5","");	
+
 	}
 	
 	public String getRandom(int max) {
@@ -44,8 +52,7 @@ public class CommonUtil {
 		double random = Math.random();
 		finalnum = (min + (int)(random*(adjmax-min)));
 		//System.out.println("# [Authentication] Calculate >>>>>>>>>>>> min="+min+" max="+adjmax+" random="+random+" (int)(random*(adjmax-min))="+(int)(random*(adjmax-min)));
-		System.out.println("# [Authentication] Token Number : "+finalnum);
-		//return String.valueOf(4);
+		System.out.println("# [CommonUtil.getRandom] Token Number : "+finalnum);
 		return String.valueOf(finalnum);
 	}
 	
@@ -64,7 +71,7 @@ public class CommonUtil {
 		.setOAuthAccessToken((String) authkeys.get("AccessToken"+random))
 		.setOAuthAccessTokenSecret((String) authkeys.get("AccessTokenSecret"+random));
 		
-		System.out.println("# [Authentication] using key: "+ (String) authkeys.get("ConsumerKey"+random) );
+		System.out.println("# [CommonUtil.getTwitterV2] Using KEY No: "+random+" key val:"+ (String) authkeys.get("ConsumerKey"+random) );
 		
 		//####【事前準備】各種Twitterインスタンスの生成
 		//# ファクトリクラスのインスタンス生成
@@ -74,12 +81,79 @@ public class CommonUtil {
 		return twitter;
 	}
 	
+	//# getRateLimitStatusの多用(認証Key数×ページ数)のため、
+	//# RateLimitMonitorや入り口チェックなど他機能が使えなくなるリスクを回避するため
+	//# 　→[20210314] V2と組み合わせたハイブリッドのために使用
+	//# =============================================
+	//# やりたい処理(endpoint)とKey数(authkey_max)を与える
+	//# 各AuthKey毎に空き状況をチェックして、処理可能なTwitterインスタンスを返却
+	public Twitter getTwitterV3(int max, String endpoint) {
+		
+		boolean foundkey = false;
+		int maxloopnum = max;
+		int counter = 1;
+		Twitter ntwitter = null;
+		GetRateLimit rl = new GetRateLimit();
+		//# 空きが見つかる or 最後のアカウントまでチェックするまで、AuthKeyをループ(引数：max)
+		do {
+			//# チェック対象のN番目のTwitterインスタンス取得
+			System.out.println("# [CommonUtil.getTwitterV3] Get Nth Twitter START");
+			ntwitter = getNthTwitter(counter);
+			//# endpointのRemaining()をチェック
+			System.out.println("# [CommonUtil.getTwitterV3] Search Nth Remain START counter="+counter);
+			//# [20210313]
+			//# getRemainingLimitV2の問題点として、毎回1つ目から空きを探すため
+			//# 後半のKeyを使う時ほど空振りの無駄な空き確認が増える。
+			//# それを防ぐため「空き位置」の値を保持して持ちまわる
+			//# 　→【断念】15分で回復する＆現状末尾→先頭に戻る仕組み無い為NG	
+			int remain = rl.getRemainingLimitV2(endpoint, ntwitter);
+			//# 空きが見つかったら「空きフラグ」を更新
+			if(remain > 0) {
+				foundkey = true;
+				System.out.println("# [CommonUtil.getTwitterV3] Found usable key ="+counter);
+			}
+			//# カウンタを更新
+			counter++;
+		} while(!foundkey && counter <= maxloopnum);
+		//# もし見つからなかった場合、暫定で最後を返却
+		if(!foundkey) {
+			ntwitter = getNthTwitter(counter);
+			System.out.println("# [CommonUtil.getTwitterV3] NO KEY FOUND......");
+		}
+		return ntwitter;		
+	}
+	
+	//# N番目のTwitterインスタンスを返却
+	public Twitter getNthTwitter(int nth) {
+		
+		//#### 認証情報の設定準備 (ConfigurationBuilderクラス)
+		//# インスタンス生成 ＆　認証キー情報のセット
+		ConfigurationBuilder cb = new ConfigurationBuilder();
+		setAuthKeys();
+		String number = String.valueOf(nth);
+		//# キー情報の設定
+		cb.setDebugEnabled(true)
+		.setOAuthConsumerKey((String) authkeys.get("ConsumerKey"+number))
+		.setOAuthConsumerSecret((String) authkeys.get("ConsumerSecret"+number))
+		.setOAuthAccessToken((String) authkeys.get("AccessToken"+number))
+		.setOAuthAccessTokenSecret((String) authkeys.get("AccessTokenSecret"+number));
+		
+		System.out.println("# [CommonUtil.getNthTwitter] USE KEY: "+nth+" KEY VAL:"+ (String) authkeys.get("ConsumerKey"+number) );
+		
+		//####【事前準備】各種Twitterインスタンスの生成
+		//# ファクトリクラスのインスタンス生成
+		TwitterFactory tf = new TwitterFactory(cb.build());
+		//# Twitterクラスのインスタンス生成
+		Twitter twitter = tf.getInstance();
+		return twitter;
+	}	
+
 	//# @@@@@@@@@@@@@@@@@@@@@ 旧バージョン（削除予定）@@@@@@@@@@@@@@@@@@@@@
 	public String ConsumerKey = "REMOVED_TOKEN1";
 	public String ConsumerSecret = "REMOVED_TOKEN2";
 	public String AccessToken = "REMOVED_TOKEN3";
 	public String AccessTokenSecret = "REMOVED_TOKEN4";
-	
+		
 	//#### 事前準備処理のクラス
 	public Twitter getTwitter() {
 		
