@@ -9,9 +9,9 @@ import javax.servlet.http.HttpServletResponse;
 
 import functions.FollowerInfo;
 import models.FollowersList;
+import models.RateLimitMonitor;
 import twitter4j.User;
 import utils.DbConnectUtil3;
-import utils.GetRateLimit;
 import utils.RoutingTable;
 
 @WebServlet(RoutingTable.followerV3_sv)
@@ -22,14 +22,21 @@ public class TwitterFollowerSearch_V3 extends HttpServlet {
 
 		DbConnectUtil3 db = new DbConnectUtil3();
 		
-		//## RateLimitExceed対応(Remaining * Unit < followerの判定)
-		GetRateLimit rl = new GetRateLimit();
+		//## RateLimit回避の総数チェック対応(Remaining×Unit＜followerの判定)
+		System.out.println("# [SV_④v3] === [RateLimit] Avoid Rate Limit Exceed START ===");
 		FollowerInfo fi = new FollowerInfo();
-		int ratelimit = rl.getRemainingLimit(RoutingTable.getFollowersList);
-		//# 残照会可能件数（ページ単位=Max200 × RateLimit残コール回数）
-		int remaining = RoutingTable.pagelimit_follow200 * rl.getRemainingLimit(RoutingTable.getFollowersList);
-		int followernum = FollowerInfo.getFollowerCount(request.getParameter("searchUser"));
-		System.out.println("# [RateLimit] follower="+followernum+" remaining="+remaining);
+		RateLimitMonitor rlm = new RateLimitMonitor();
+		//# ①残照会可能件数（ページ単位=Max200×RateLimit残コール総回数×安全率）
+		//# 入り口チェック用
+		int unit_number = RoutingTable.unitpage_follow200;
+		int remain_call = rlm.remain_followerlist;
+		double remaintotal = unit_number * remain_call * RoutingTable.safety_ratio;
+		//# V2→V3切り替え判断用
+		int max_call = rlm.total_followerlist;
+
+		//# ②照会予定のフォロワー数（①と比較する対象）
+		int followernum = fi.getFollowerCount(request.getParameter("searchUser"));
+		System.out.println("# [SV_④v3] [RateLimit] follower="+followernum+" remaining="+(int)remaintotal);
 
 		//# ユーザが１日の利用上限を超えている場合
 		if(db.DbUserUseCount(request.getRemoteUser())>=RoutingTable.api_limit) {
@@ -41,9 +48,12 @@ public class TwitterFollowerSearch_V3 extends HttpServlet {
 			RequestDispatcher dispatch = request.getRequestDispatcher(forwardpage);
 			dispatch.forward(request, response);					
 		}
-		//# APIのRateLimit=0の場合 or 検索対象フォロワー数(followernum)＞残数(ratelimit * 単位件数=remaining)の場合
-		else if(ratelimit==0 || followernum > remaining) {
-			System.out.println("# [RateLimit] &&&&&&&& not enough remaining ");
+		//# 下記①と②を比較して「①＜②」の場合はビジー画面に遷移させる
+		//# 　①残照会可能件数(remaintotal)
+		//# 　②照会予定のフォロワー数(followernum)
+		else if(followernum > (int)remaintotal) {
+			System.out.println("# [SV_④v3] [RateLimit] NOT ENOUGH REMAINING ");
+			System.out.println("# [SV_④v3] === [RateLimit] Avoid Rate Limit Exceed END ===");
 			//# 遷移先画面
 			String forwardpage = "./ApplicationBusy.jsp";
 			
@@ -51,7 +61,20 @@ public class TwitterFollowerSearch_V3 extends HttpServlet {
 			RequestDispatcher dispatch = request.getRequestDispatcher(forwardpage);
 			dispatch.forward(request, response);					
 		}
+		//# フォロワー０人の場合
+		//# [20210315] 0件時ハンドリング
+		//# 照会結果が完全に0件の場合 → 照会結果０件画面に遷移
+		else if(followernum==0) {
+			//# 遷移先画面
+			String forwardpage0 = "./NoResultFound.jsp";
+			request.setAttribute("0Error", "（このユーザーは現在フォロワーが０人です）");
+			
+			//# 画面遷移
+			RequestDispatcher dispatch = request.getRequestDispatcher(forwardpage0);
+			dispatch.forward(request, response);	                						
+		}
 		else {
+			System.out.println("# [SV_④v3] === [RateLimit] Avoid Rate Limit Exceed END ===");
 			//# DB接続・API利用回数更新
 			db.DbUpdateApiUseCount(request.getRemoteUser());
 			db.DbClose();
@@ -76,10 +99,26 @@ public class TwitterFollowerSearch_V3 extends HttpServlet {
 			
 			//# 【※V3変更点】フォロワー情報の一括取得
 			//#  getAllFollowersInfo　→　getAllFollowersInfoV2　に変更
+			//#  getAllFollowersInfoV2の内部で空きKeyへの振り分け処理を実装
+			//# [20210314]
+			//# 　V2とV3を組み合わせたハイブリッド方式に変更
 			int counter = 1;
-			System.out.println("==== [SV_④v3] get user START");
-			User[] followers = fi.getAllFollowersInfoV2(searchTarget);
-			System.out.println("==== [SV_④v3] get user END");
+			System.out.println("==== [SV_④v3] Get follower START");
+			User[] followers = null;
+			//# 【危険域】→V3（空きチェック方式）を使用
+			//#  残コール数(remain_call)が全コール数(max_call)の1/2以下になった場合
+			if(remain_call * 2 < max_call) {
+				System.out.println("==== [SV_④v3] USE GET TWITTER V3: MaxCall="+max_call+" RemainCall="+remain_call*3);
+				followers = fi.getAllFollowersInfoV2(searchTarget,"V3");
+			}
+			//# 【安全域】→V2（ランダム方式）を使用
+			//#  入り口チェック値(remaintotal)に更に安全率を乗じた「remaintotal_safe」より少ない
+			else {
+				System.out.println("==== [SV_④v3] USE GET TWITTER V2");
+				followers = fi.getAllFollowersInfoV2(searchTarget,"V2");
+			}
+			
+			System.out.println("==== [SV_④v3] Get follower END");
 			if(followers != null) {
 				for(User follower : followers) {
 					if(follower != null) {
@@ -92,7 +131,7 @@ public class TwitterFollowerSearch_V3 extends HttpServlet {
 //						follower_count.add(follower.getFollowersCount());
 //						follower_name.add(follower.getName());
 						
-						System.out.println("====== [SV_④v3] counter = "+counter);
+						//System.out.println("====== [SV_④v3] counter = "+counter);
 						counter++;
 					}
 				}
