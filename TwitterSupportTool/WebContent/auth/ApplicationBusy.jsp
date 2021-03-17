@@ -10,8 +10,8 @@
 </head>
 <body>
 <br />
-<div class="center">当画面は現在、非常に混雑した状態になっております。</div><br />
-<div class="center">約20分程度、時間を空けるとスムーズに利用できる可能性があります。</div><br />
+<h2 class="center">当画面は現在、非常に混雑した状態になっております。</h2><br />
+<h2 class="center">約20分程度、時間を空けるとスムーズに利用できる可能性があります。</h2><br />
 <div class="center"><a href=<%=RoutingTable.home_fromauth %>>▶ホーム画面に戻る</a></div>
 </body>
 </html>

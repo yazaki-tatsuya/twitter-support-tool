@@ -11,7 +11,7 @@
 <%@ include file="HeaderAuth.jsp" %>
 	<h3 id="title" class="center title_narrow">フォロワー検索&nbsp;（検索画面）</h3>
 	<h4 id="subtitle" class="center title_narrow">Search and get the list of your followers !</h4>
-	<br />	
+	<br />
 	<div class="center">指定した「ユーザーID&#x1f194;」のフォロワー&#x1f46b;の一覧を取得できます。</div>
 	<br />
 	<div class="center">====================================</div>

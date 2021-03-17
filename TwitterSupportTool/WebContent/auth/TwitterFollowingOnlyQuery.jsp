@@ -31,7 +31,7 @@
 		<%}
 	%>
 	<h3>【制約事項】</h3>
-	<div class="indent_1 line_height">・フォロワーの人数が<mark>「<%=RoutingTable.followerlimit_lists %>」人を超える場合</mark>は取得できません（改良中）。</div>
+	<div class="indent_1 line_height">・フォロワーの人数が<mark>「<%=RoutingTable.followerlimit_ids %>」人を超える場合</mark>は取得できません（改良中）。</div>
 	<div class="indent_1 line_height">・フォローしてる人数が<mark>「<%=RoutingTable.friendslimit_lists %>」人を超える場合</mark>は取得できません（改良中）。</div>
 	<br />
 </body>

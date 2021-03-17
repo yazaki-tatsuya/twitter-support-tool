@@ -10,7 +10,7 @@
 </head>
 <body>
 <br />
-<div class="center">1日のAPI利用回数上限（<%=RoutingTable.api_limit %>回）に達しました。</div><br />
+<h2 class="center">1日のAPI利用回数上限（<%=RoutingTable.api_limit %>回）に達しました。</h2><br />
 <div class="center">翌日には再び0回にリセットされますので、また明日以降にご利用ください。</div><br />
 <div class="center"><input type="button" value="ログアウト" onclick="location.href='<%=RoutingTable.apphome+"/"+RoutingTable.authzone %>/LogoutServlet1'"></div>
 </body>

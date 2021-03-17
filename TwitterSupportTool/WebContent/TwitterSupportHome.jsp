@@ -69,6 +69,20 @@
 	</tr>
 </table>
 <br /><br />
+<%if(username.matches("user0[0-9]")) {%>
+<h3>【管理画面】</h3>
+<table border="1" width="100%">
+	<tr>
+		<th width="120">機能ID</th>
+		<th width="300">機能名</th>
+		<th width="780">説明</th>
+	</tr>
+	<tr>
+		<td><p><a href="RateLimitMonitorV2.jsp">RateLimitMonitorV2</a></p></td>
+		<td>RateLimitモニター</td>
+		<td>各APIエンドポイントのRateLimitの状況モニタ</td>
+	</tr>	
+</table>
 <h3>【調整中】</h3>
 <table border="1" width="100%">
 	<tr>
@@ -80,8 +94,9 @@
 		<td><p><a href=<%=RoutingTable.followerV4_q %>>TWFLWQUE_v4</a></p></td>
 		<td>○○さん&#x1f466;&#x1f467;のフォロワー&#x1f46b;検索(Ver.4)</td>
 		<td>指定した「ユーザーID&#x1f194;」のフォロワー&#x1f46b;の一覧を取得できます。</td>
-	</tr>	
+	</tr>
 </table>
+<%}%>
 </form>
 <br /><br />
 </body>

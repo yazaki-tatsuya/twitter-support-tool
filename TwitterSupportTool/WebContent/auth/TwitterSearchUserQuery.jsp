@@ -31,7 +31,7 @@
 		<%}
 	%>
 	<h3>【制約】</h3>
-	<div class="indent_1">・最大「<%=RoutingTable.user_pagelimit*20 %>」件まで表示します。</div>	
+	<div class="indent_1">・最大「<%=RoutingTable.user_pagelimit * RoutingTable.unitpage_user %>」件まで表示します。</div>	
 	<h3>【注意】</h3>
 	<div class="indent_1">検索数が多い場合、１０秒〜１５秒程度掛かることがございます &#x1f647;</div>
 	<div class="indent_1">ご不便お掛けしますが、よろしくお願いいたします &#x1f647;</div>
