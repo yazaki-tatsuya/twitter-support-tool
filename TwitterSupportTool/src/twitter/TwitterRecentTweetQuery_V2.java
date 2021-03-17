@@ -74,6 +74,18 @@ public class TwitterRecentTweetQuery_V2 extends HttpServlet {
 	            	Paging pg = new Paging(pgcount,RoutingTable.recent_unitpage);
 	                //# クエリの発行・結果格納
 	                statusList = twitter.getUserTimeline(searchTarget, pg);
+					//# [20210315] 0件時ハンドリング
+					//# 1page目で0件、つまり照会結果が完全に0件の場合
+	                //# 　→照会結果０件画面に遷移
+					if(pgcount==1 && statusList.size()==0) {
+	        			//# 遷移先画面
+	        			String forwardpage0 = "./NoResultFound.jsp";
+	        			request.setAttribute("0Error", "（このユーザーはまだツイートをしていません）");
+	        			
+	        			//# 画面遷移
+	        			RequestDispatcher dispatch = request.getRequestDispatcher(forwardpage0);
+	        			dispatch.forward(request, response);	                						
+					}
 	                //# 取得した直近200件のタイムラインアクティビティをループ
 	                for (Status status : statusList) {
 	                	//# リツイートは表示しない

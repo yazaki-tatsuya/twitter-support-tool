@@ -19,6 +19,8 @@ import javax.servlet.RequestDispatcher;
 @WebServlet(RoutingTable.val_util)
 public class ValidationUtil extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+	FollowerInfo fi = new FollowerInfo();
+	FollowingInfo fi2 = new FollowingInfo();
 	
 	//#【共通】FunctionIDを見て処理を振り分け
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
@@ -27,7 +29,7 @@ public class ValidationUtil extends HttpServlet {
 		request.setCharacterEncoding("UTF-8");
 		//# バリデーション対象画面の取得
 		String func = request.getParameter("FunctionId");
-		System.out.println("# == [Validation] Get Function Id:"+func);
+		System.out.println("# [ValidationUtil.doPost] Get Function Id:"+func);
 		//# 対象画面のバリデーションを実施		
 		//# (０１)ハッシュタグによるTweet検索_V2
 		if(func.equals("TWHTSRCH_v2")) {TWHTSRCH_Validate_V2(request,response);}
@@ -58,8 +60,8 @@ public class ValidationUtil extends HttpServlet {
 	//#【共通】フォロワー数上限抵触チェック(getFollowersIDs用＝5000×15回）
 	public void followerCountCheck_ids(String userid) {
 		//もしフォロワー数がしきい値以上なら
-		if(FollowerInfo.getFollowerCount(userid) > RoutingTable.followerlimit_ids) {
-			int followercount = FollowerInfo.getFollowerCount(userid);
+		if(fi.getFollowerCount(userid) > RoutingTable.followerlimit_ids) {
+			int followercount = fi.getFollowerCount(userid);
 			//利用不可のメッセージを出力
 			errs.add("申し訳ございません。ご指定のユーザIDはフォロワーが「"+RoutingTable.followerlimit_ids+"」人以上（"+followercount+" 人）のためご利用できません（システム制限の都合上）");
 		}
@@ -68,8 +70,8 @@ public class ValidationUtil extends HttpServlet {
 	//#【共通】フォロワー数上限抵触チェック(getFollowersLists用＝200単位×15回）
 	public void followerCountCheck_lists(String userid) {
 		//もしフォロワー数がしきい値以上なら
-		if(FollowerInfo.getFollowerCount(userid) > RoutingTable.followerlimit_lists) {
-			int followercount = FollowerInfo.getFollowerCount(userid);
+		if(fi.getFollowerCount(userid) > RoutingTable.followerlimit_lists) {
+			int followercount = fi.getFollowerCount(userid);
 			//利用不可のメッセージを出力
 			errs.add("申し訳ございません。ご指定のユーザIDはフォロワーが「"+RoutingTable.followerlimit_lists+"」人以上（"+followercount+" 人）のためご利用できません（システム制限の都合上）");
 		}
@@ -78,8 +80,8 @@ public class ValidationUtil extends HttpServlet {
 	//#【共通】フォロワー数上限抵触チェック(getFriendsLists用＝200単位×15回）
 	public void friendsCountCheck_lists(String userid) {
 		//もしフォロワー数がしきい値以上なら
-		if(FollowingInfo.getFollowingCount(userid) > RoutingTable.friendslimit_lists) {
-			int friednscount = FollowingInfo.getFollowingCount(userid);
+		if(fi2.getFollowingCount(userid) > RoutingTable.friendslimit_lists) {
+			int friednscount = fi2.getFollowingCount(userid);
 			//利用不可のメッセージを出力
 			errs.add("申し訳ございません。ご指定のユーザIDはフォローしている人数が「"+RoutingTable.friendslimit_lists+"」人以上（"+friednscount+" 人）のためご利用できません（システム制限の都合上）");
 		}
@@ -95,6 +97,33 @@ public class ValidationUtil extends HttpServlet {
 		}
 	}
 	
+	//#【共通】TweetIDとScreenNameの整合チェック（そのTweetは入力されたScreenIDのものか？をチェック）
+	public void isHisOrHerTweet(String screenname,long tweetid) {
+		
+		boolean checkresult = false;
+		checkresult = RetweeterInfo.isHisOrHerTweetCheck(screenname, tweetid);
+		
+		//# もしチェック結果がFalse（TweetIdの主とScreenNameが不一致の場合）
+		if(!checkresult) {
+			//# 不一致のメッセージを出力
+			errs.add("入力されたTweetID「"+String.valueOf(tweetid)+"」は「"+screenname+"」さんのツイートではありません（不一致）");
+		}
+	}
+	
+	//#【共通】ScreenNameで指定したユーザが非公開か？をチェック
+	public void userAvailable(String screenname) {
+		
+		FollowerInfo fi = new FollowerInfo();
+		boolean checkresult = false;
+		checkresult = fi.userAvailableCheck(screenname);
+		
+		//# もしチェック結果がFalse（TweetIdの主とScreenNameが不一致の場合）
+		if(!checkresult) {
+			//# 不一致のメッセージを出力
+			errs.add("入力されたユーザーIDは非公開（鍵付き）のため、フォロワー／フォローのデータを取得できません");
+		}
+	}
+	
 	//#【共通】getErrorList()メソッド：エラーメッセージ生成
 	public String getErrorList() {
 		StringBuffer buf = new StringBuffer();
@@ -105,7 +134,7 @@ public class ValidationUtil extends HttpServlet {
 			}
 		}
 		buf.append("</ul>");
-		System.out.println("# == [Validation] Error Message: "+buf.toString());
+		System.out.println("# == [ValidationUtil.getErrorList] Error Message: "+buf.toString());
 		return buf.toString();
 	}
 
@@ -122,7 +151,7 @@ public class ValidationUtil extends HttpServlet {
 		//# (空なら「[項目名] is a mandatory～」のメッセージArrayListに格納)
 		requiredCheck(request.getParameter("searchTag"),"ハッシュタグ");
 		requiredCheck(request.getParameter("searchFav"),"いいね数");
-		System.out.println("# == [Validation] バリデーション対象 HashTag : "+request.getParameter("searchTag")+" FavCount: "+request.getParameter("searchFav"));
+		System.out.println("# [ValidationUtil.TWHTSRCH_Validate_V2] バリデーション対象 HashTag : "+request.getParameter("searchTag")+" FavCount: "+request.getParameter("searchFav"));
 		//# エラーある場合
 		if(hasErrors()) {
 			//# エラーメッセージをリクエストの属性としてセット
@@ -134,7 +163,7 @@ public class ValidationUtil extends HttpServlet {
 		}
 		//# エラーない場合
 		else {
-			System.out.println("# == [Validation] 必須チェックを通過 ");
+			System.out.println("# [ValidationUtil.TWHTSRCH_Validate_V2] 必須チェックを通過 ");
 			//# 次画面に渡すために再度パラメタを同名でセット
 			//# formの値(getParameter)をsessionに保存(setAttribute)
 			HttpSession session = request.getSession();
@@ -215,6 +244,7 @@ public class ValidationUtil extends HttpServlet {
 		//# (空なら「[項目名] is a mandatory～」のメッセージArrayListに格納)
 		requiredCheck(request.getParameter("searchUser"),"ユーザーID");
 		followerCountCheck_lists(request.getParameter("searchUser"));
+		userAvailable(request.getParameter("searchUser"));
 		//# エラーある場合
 		if(hasErrors()) {
 			//# エラーメッセージをリクエストの属性としてセット
@@ -248,6 +278,7 @@ public class ValidationUtil extends HttpServlet {
 		requiredCheck(request.getParameter("searchUser"),"ユーザID");
 		followerCountCheck_ids(request.getParameter("searchUser"));
 		retweeterCountCheck(Long.parseLong(request.getParameter("searchTweet")));
+		isHisOrHerTweet(request.getParameter("searchUser"),Long.parseLong(request.getParameter("searchTweet")));
 		//# エラーある場合
 		if(hasErrors()) {
 			//# エラーメッセージをリクエストの属性としてセット
@@ -278,8 +309,9 @@ public class ValidationUtil extends HttpServlet {
 		//# 必須入力項目のチェックを実行
 		//# (空なら「[項目名] is a mandatory～」のメッセージArrayListに格納)
 		requiredCheck(request.getParameter("searchUser"),"ユーザID");
-		followerCountCheck_lists(request.getParameter("searchUser"));
+		followerCountCheck_ids(request.getParameter("searchUser"));
 		friendsCountCheck_lists(request.getParameter("searchUser"));
+		userAvailable(request.getParameter("searchUser"));
 		//# エラーある場合
 		if(hasErrors()) {
 			//# エラーメッセージをリクエストの属性としてセット
@@ -296,7 +328,7 @@ public class ValidationUtil extends HttpServlet {
 			HttpSession session = request.getSession();
 			session.setAttribute("searchUser", request.getParameter("searchUser"));	
 			//# バリデーションに問題がなければ次画面へ遷移
-			String nextpage = RoutingTable.followonly_sv;
+			String nextpage = RoutingTable.followonly_sv2;
 			//String nextpage="/hashtag_search_with_fav";
 			RequestDispatcher rd = getServletContext().getRequestDispatcher(nextpage);
 			rd.forward(request, response);

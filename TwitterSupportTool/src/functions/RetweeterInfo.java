@@ -71,4 +71,22 @@ public class RetweeterInfo {
 		System.out.println("# ======== [Function] Get Retweet count: "+retweeter_count);
 		return retweeter_count;
 	}
+	
+	//# (E)TweetIDとScreenNameの整合チェック（そのTweetは入力されたScreenIDのものか？をチェック）
+	public static boolean isHisOrHerTweetCheck(String screenname, long tweetid) {
+		
+		boolean isHisOrHer = false;
+		//# TweetIDからScreenNameを取得
+		Status statuses;
+		try {
+			statuses = twitter.showStatus(tweetid);
+	        //# 入力されたScreenName vs 入力されたTweetの主（ScreenName）を比較
+			if(screenname.equals(statuses.getUser().getScreenName())) {
+				isHisOrHer = true;
+			}
+		} catch (TwitterException e) {
+			e.printStackTrace();
+		}
+        return isHisOrHer;
+	}
 }

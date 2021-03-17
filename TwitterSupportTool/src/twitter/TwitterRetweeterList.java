@@ -30,6 +30,18 @@ public class TwitterRetweeterList extends HttpServlet {
 			//# 画面遷移
 			RequestDispatcher dispatch = request.getRequestDispatcher(forwardpage);
 			dispatch.forward(request, response);					
+		}
+		//# [20210315] 0件時ハンドリング
+		//# リツイーター０人の場合
+        //# 　→照会結果０件画面に遷移
+		else if(RetweeterInfo.getRetweeterCount(Long.parseLong(request.getParameter("searchTweet")))==0) {
+			//# 遷移先画面
+			String forwardpage0 = "./NoResultFound.jsp";
+			request.setAttribute("0Error", "（このツイートはリツイートが０件です）");
+			
+			//# 画面遷移
+			RequestDispatcher dispatch = request.getRequestDispatcher(forwardpage0);
+			dispatch.forward(request, response);	                						
 		}else {
 			//# DB接続・API利用回数更新
 			db.DbUpdateApiUseCount(request.getRemoteUser());
@@ -58,6 +70,7 @@ public class TwitterRetweeterList extends HttpServlet {
 			RetweeterInfo ri = new RetweeterInfo();
 			System.out.println("# == [SV_⑤] Get retweet info START");
 			List<Status> statuses = ri.getRetweeterInfo(searchTweet);
+			
 			System.out.println("# == [SV_⑤] Get retweet info END");
 
 			//# ②フォロワーのIDを取得

@@ -80,12 +80,23 @@ public class TwitterHashTagSearch_V2 extends HttpServlet {
 				//# クエリの発行・結果格納
 				try {
 					queryResult = twitter.search(query);
+					//# [20210315] 0件時ハンドリング
+					//# 1page目で0件、つまり照会結果が完全に0件の場合
+	                //# 　→照会結果０件画面に遷移
+					if(counter==0 && queryResult.getTweets().size()==0) {
+	        			//# 遷移先画面
+	        			String forwardpage0 = "./NoResultFound.jsp";
+	        			
+	        			//# 画面遷移
+	        			RequestDispatcher dispatch = request.getRequestDispatcher(forwardpage0);
+	        			dispatch.forward(request, response);	                						
+					}
 				} catch (TwitterException e) {
 					e.printStackTrace();
 				}
 				for(Status status : queryResult.getTweets()) {
-					
-					if(!status.isRetweet() && status.getFavoriteCount() >= favcount) {
+					if(status.getFavoriteCount() >= favcount) {
+					//if(!status.isRetweet() && status.getFavoriteCount() >= favcount) {
 						//####(5)URLの検出・整形
 						String tmp = status.getText();
 						String regex = "\\b(https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]";
@@ -117,11 +128,11 @@ public class TwitterHashTagSearch_V2 extends HttpServlet {
 					}
 				}
 				//# 0.5秒待つ
-				try {
-					Thread.sleep(500);				
-				}catch(InterruptedException e){
-					e.printStackTrace();
-				}
+//				try {
+//					Thread.sleep(500);				
+//				}catch(InterruptedException e){
+//					e.printStackTrace();
+//				}
 				counter++;
 				System.out.println("# ==== [SV_①v2] searching tweet of page : "+counter);
 			}while((query = queryResult.nextQuery())!=null && counter<RoutingTable.hashtagV2_pagelimit);

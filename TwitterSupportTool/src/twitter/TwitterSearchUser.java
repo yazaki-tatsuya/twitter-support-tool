@@ -36,6 +36,8 @@ public class TwitterSearchUser extends HttpServlet {
 			
 			//#### キー認証・Twitterクラスのインスタンス生成
 			CommonUtil cu = new CommonUtil();
+			//# 割り振った対象がRemainゼロの場合、いきなりLimitExceedになってしまう
+			//# →フォロー／フォロワー系以外は余程の事が無い限りExceedしないため静観
 			Twitter twitter = cu.getTwitterV2(RoutingTable.authkey_max);
 			
 			//#### 変数定義など
@@ -66,38 +68,55 @@ public class TwitterSearchUser extends HttpServlet {
 	            do {
 	                users = twitter.searchUsers(searchTarget, page);
 	                System.out.println("# [SV_②] ==== page = "+page+" size="+users.size());
-	                if(page>1) {System.out.println("# [SV_②] ======== checking prev 1st & next 1st records : "+users.get(0).getScreenName()+" vs "+users_prev.getScreenName());}
-	                //「１ページ目」or「２ページ目以降で、前回と異なるセットである」なら取得処理に入る
-	               	if(page == 1 || page > 1 && !users.get(0).getScreenName().equals(users_prev.getScreenName()) ) {              
-		                for (User user : users) {
-		                	if (user.getStatus() != null) {
-		                		ul.setUserName(user.getName());
-		                		ul.setUserId(user.getScreenName());
-		                		ul.setIsLocked("○：公開");
-		                		ul.setNewTweet(user.getStatus().getText());
-//		                    	result_name1.add(user.getName());
-//		                    	result_name2.add(user.getScreenName());
-//		                    	result_stat1.add("○：公開");
-//		                    	result_text1.add(user.getStatus().getText());
-		                    } else {
-		                        // 保護されたユーザー
-		                		ul.setUserName(user.getName());
-		                		ul.setUserId(user.getScreenName());
-		                		ul.setIsLocked("✕：非公開");
-		                		ul.setNewTweet("-");
-//		                    	result_name1.add(user.getName());
-//		                    	result_name2.add(user.getScreenName());
-//		                    	result_stat1.add("✕：非公開");
-//		                    	result_text1.add("-");
-		                    }              		
+	                if(page>1) {System.out.println("# [SV_②] ======== checking prev 1st & next 1st records : "+users.get(0).getScreenName()+" vs "+users_prev.getScreenName());}	                
+	                //# [20210315] 0件時ハンドリング
+	                //# 1page目で0件、つまり照会結果が完全に0件の場合
+	                //# 0件の時にOutOfBoundExceptionが発生するのを防ぐ
+	                if(page == 1 && users.size()==0) {
+	        			//# 遷移先画面
+	        			String forwardpage0 = "./NoResultFound.jsp";
+	        			
+	        			//# 画面遷移
+	        			RequestDispatcher dispatch = request.getRequestDispatcher(forwardpage0);
+	        			dispatch.forward(request, response);	                	
+	                }else{
+		                //「１ページ目」or「２ページ目以降で、前回と異なるセットである」なら取得処理に入る
+		               	if(page == 1 || (page > 1 && !users.get(0).getScreenName().equals(users_prev.getScreenName())) ) {              
+			                for (User user : users) {
+				                //# [20210315] 重複排除ハンドリング
+				                //# 最後のページは20件未満の分が重複する事象の回避
+			                	//# もし既存のIDでない場合のみ、追加する
+			                	if(!ul.getUserId().contains(user.getScreenName())) {
+				                	if (user.getStatus() != null) {
+				                		ul.setUserName(user.getName());
+				                		ul.setUserId(user.getScreenName());
+				                		ul.setIsLocked("○：公開");
+				                		ul.setNewTweet(user.getStatus().getText());
+//				                    	result_name1.add(user.getName());
+//				                    	result_name2.add(user.getScreenName());
+//				                    	result_stat1.add("○：公開");
+//				                    	result_text1.add(user.getStatus().getText());
+				                    } else {
+				                        // 保護されたユーザー
+				                		ul.setUserName(user.getName());
+				                		ul.setUserId(user.getScreenName());
+				                		ul.setIsLocked("✕：非公開");
+				                		ul.setNewTweet("-");
+//				                    	result_name1.add(user.getName());
+//				                    	result_name2.add(user.getScreenName());
+//				                    	result_stat1.add("✕：非公開");
+//				                    	result_text1.add("-");
+				                    }			                		
+			                	}
+			                }
 		                }
+		               	//# 次ページが同じ内容を重複取得してないか確認する為、セットの先頭ユーザ名記録
+		                users_prev = users.get(0);
+		                page++;
 	                }
-	               	//# 次ページが同じ内容を重複取得してないか確認する為、セットの先頭ユーザ名記録
-	                users_prev = users.get(0);
-	                page++;
 	                //# 【要改善】次ページの内容が同じでも、空ループしているため、while条件の改善が必要
 	                //# →具体的には「!users.get(0).getScreenName().equals(users_prev.getScreenName())」をwhile条件に移す？
-	            } while (users.size() > 0 && page < RoutingTable.user_pagelimit);
+	            } while (users.size() > 0 && page <= RoutingTable.user_pagelimit);
 			} catch (TwitterException e1) {
 				e1.printStackTrace();
 			}
