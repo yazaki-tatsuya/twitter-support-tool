@@ -19,7 +19,7 @@ public class DbConnectUtil3 {
 			conn = ds.getConnection();
 			stmt = conn.createStatement();
 			rs = stmt.executeQuery(select);
-			System.out.println("# [Db Connect] ** Connection Open : DbSelect :"+select);
+			System.out.println("# [DbConnectUtil3.DbSelect] ** Connection Open SELECT :"+select);
 		} catch (SQLException e1) {
 			e1.printStackTrace();
 		} catch (NamingException e2) {
@@ -37,7 +37,7 @@ public class DbConnectUtil3 {
 			conn = ds.getConnection();
 			stmt = conn.createStatement();
 			rs = stmt.executeQuery("SELECT * FROM USER_ACCESS_COUNT");
-			System.out.println("# [Db Connect] ** Connection Open : DbUserExistCheck :SELECT * FROM USER_ACCESS_COUNT");
+			System.out.println("# [DbConnectUtil3.DbUserExistCheck]  ** Connection Open : SELECT * FROM USER_ACCESS_COUNT");
 			while(rs.next()){
 				if(rs.getString("USER_ID").equals(userid)) {
 					exist = true;
@@ -62,7 +62,7 @@ public class DbConnectUtil3 {
 			conn = ds.getConnection();
 			stmt = conn.createStatement();
 			rs = stmt.executeQuery("SELECT * FROM USER_ACCESS_COUNT WHERE USER_ID='"+userid+"'");
-			System.out.println("# [Db Connect] ** Connection Open : DbUserUseCount =SELECT * FROM USER_ACCESS_COUNT WHERE USER_ID='"+userid+"'");
+			System.out.println("# [DbConnectUtil3.DbUserUseCount] ** Connection Open : SELECT * FROM USER_ACCESS_COUNT WHERE USER_ID='"+userid+"'");
 			while(rs.next()){
 				use_count = (Integer) rs.getInt("ACCESS_COUNT");
 			}			
@@ -84,7 +84,7 @@ public class DbConnectUtil3 {
 			conn = ds.getConnection();
 			stmt = conn.createStatement();
 			rs = stmt.executeQuery("INSERT INTO USER_ACCESS_COUNT (USER_ID,ACCESS_COUNT) VALUES ('"+userid+"',0)");			
-			System.out.println("# [Db Connect] ** Connection Open : DbUserInsert **");
+			System.out.println("# [DbConnectUtil3.DbUserInsert] ** Connection Open **");
 		} catch (SQLException e1) {
 			e1.printStackTrace();
 		} catch (NamingException e2) {
@@ -101,7 +101,7 @@ public class DbConnectUtil3 {
 			conn = ds.getConnection();
 			stmt = conn.createStatement();
 			rs = stmt.executeQuery("UPDATE USER_ACCESS_COUNT SET ACCESS_COUNT="+(current_count+1)+" WHERE USER_ID='"+userid+"'");			
-			System.out.println("# [Db Connect] ** Connection Open : DbUpdateApiUseCount **");
+			System.out.println("# [DbConnectUtil3.DbUpdateApiUseCount] ** Connection Open **");
 		} catch (SQLException e1) {
 			e1.printStackTrace();
 		} catch (NamingException e2) {
@@ -112,7 +112,7 @@ public class DbConnectUtil3 {
 	//# クローズ処理
 	public void DbClose () {
 		try {
-			if(rs != null) {rs.close(); System.out.println("# [Db Connect] @@ Connection Closed @@");}
+			if(rs != null) {rs.close(); System.out.println("# [DbConnectUtil3.DbClose] @@ Connection CLOSED @@");}
 			if(stmt != null) {stmt.close();}
 			if(conn != null) {conn.close();}
 		} catch (SQLException e) {

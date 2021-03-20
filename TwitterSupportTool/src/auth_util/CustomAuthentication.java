@@ -18,15 +18,15 @@ public class CustomAuthentication extends HttpServlet {
 		//# 遷移先画面
 		//# 元々の要求画面の情報をLogin1.jspのhiddenフィールドを通じて取得★
 		String redirect_success = RoutingTable.apphome + request.getParameter("orig_request");
-		System.out.println("# [Login] --- forward screen : "+redirect_success);
+		System.out.println("# [CustomAuthentication.doPost] LOGIN --- forward to : "+redirect_success);
 		String forward_error = RoutingTable.apphome + "/LoginError.jsp";
 		String user = request.getParameter("j_username");
 		String passwd = request.getParameter("j_password");
 
 		try {
-			System.out.println("# [Login] --- login start");
+			System.out.println("# [CustomAuthentication.doPost] LOGIN --- START");
 			request.login(user, passwd);
-			System.out.println("# [Login] --- login success");
+			System.out.println("# [CustomAuthentication.doPost] LOGIN --- SUCCESS");
 			//# 画面遷移（独自ログイン時に相対パスが異常ない様forwardではなくRedirectで送る）
 			response.sendRedirect(redirect_success);
 		} catch(ServletException e) {
