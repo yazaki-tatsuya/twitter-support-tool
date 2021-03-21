@@ -31,7 +31,7 @@ public class RoutingTable {
 	//# API利用回数の上限（全体共通）
 	public static final int api_limit = 20;		//5回位にしたい
 	//# API認証キーの最大個数
-	public static final int authkey_max = 5;	//Max=5
+	public static final int authkey_max = 7;	//Max=5
 	//# API上限チェック時の安全率（入り口チェック用）
 	public static final double safety_ratio = 0.5;	//0.4〜0.6程度(同時に複数人が照会する事も想定して)
 	//# API上限チェック時の安全率（V2＆V3切り替え判定用）

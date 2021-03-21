@@ -43,6 +43,17 @@ public class CommonUtil {
 		authkeys.put("AccessToken5","");
 		authkeys.put("AccessTokenSecret5","");	
 
+		//# (6)MoanaBeach
+		authkeys.put("ConsumerKey6","");
+		authkeys.put("ConsumerSecret6","");
+		authkeys.put("AccessToken6","");
+		authkeys.put("AccessTokenSecret6","");
+		
+		//# (7)ShellieMayHawaii
+		authkeys.put("ConsumerKey7","");
+		authkeys.put("ConsumerSecret7","");
+		authkeys.put("AccessToken7","");
+		authkeys.put("AccessTokenSecret7","");
 	}
 	
 	public String getRandom(int max) {
