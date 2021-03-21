@@ -1,5 +1,7 @@
 package twitter;
 import java.io.IOException;
+import java.util.Date;
+
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -7,12 +9,14 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import models.OperationLog;
 import models.SearchUsersList;
 import twitter4j.ResponseList;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.User;
 import utils.DbConnectUtil3;
+import utils.LogMsg;
 import utils.RoutingTable;
 
 @WebServlet(RoutingTable.user_sv)
@@ -47,6 +51,8 @@ public class TwitterSearchUser extends HttpServlet {
 			String searchTarget = "#" + request.getParameter("searchUser");
 			request.setAttribute("keyword", request.getParameter("searchUser"));
 			System.out.println("# == [SV_②] setAttribute keyword = "+request.getParameter("searchUser"));
+			(new OperationLog(new Date(),request.getRemoteUser(),LogMsg.sv2,searchTarget,"Get User START")).WriteLog();
+			
 			//# 遷移先画面
 			String forwardpage = RoutingTable.user_r;
 			System.out.println("# == [SV_②] Forward page = "+forwardpage);
@@ -129,6 +135,7 @@ public class TwitterSearchUser extends HttpServlet {
 //			request.setAttribute("result_text1",result_text1);
 			request.setAttribute("SearchUsersList",ul);
 			//# 画面遷移
+			(new OperationLog(new Date(),request.getRemoteUser(),LogMsg.sv2,searchTarget,"Get User END")).WriteLog();
 			RequestDispatcher dispatch = request.getRequestDispatcher(forwardpage);
 			dispatch.forward(request, response);		
 		}

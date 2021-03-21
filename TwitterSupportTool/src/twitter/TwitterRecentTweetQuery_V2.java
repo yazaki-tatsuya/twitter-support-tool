@@ -1,6 +1,7 @@
 package twitter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.servlet.RequestDispatcher;
@@ -16,7 +17,9 @@ import twitter4j.Status;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import utils.DbConnectUtil3;
+import utils.LogMsg;
 import utils.RoutingTable;
+import models.OperationLog;
 import models.RecentTweets;
 
 @WebServlet(RoutingTable.recentV2_sv)
@@ -49,6 +52,7 @@ public class TwitterRecentTweetQuery_V2 extends HttpServlet {
 			String searchTarget = request.getParameter("searchUserTweet");
 			System.out.println("# == [SV_③v2] Search Target = "+searchTarget);
 			request.setAttribute("username", searchTarget);
+			(new OperationLog(new Date(),request.getRemoteUser(),LogMsg.sv3,searchTarget,"Get Recent Tweet Query START")).WriteLog();
 			
 			//# 遷移先画面
 			String forwardpage = RoutingTable.recentV2_r;
@@ -133,6 +137,7 @@ public class TwitterRecentTweetQuery_V2 extends HttpServlet {
 			request.setAttribute("RecentTweets",rc);
 		    
 			//# 画面遷移
+			(new OperationLog(new Date(),request.getRemoteUser(),LogMsg.sv3,searchTarget,"Get Recent Tweet Query END")).WriteLog();
 			RequestDispatcher dispatch = request.getRequestDispatcher(forwardpage);
 			dispatch.forward(request, response);			
 		}

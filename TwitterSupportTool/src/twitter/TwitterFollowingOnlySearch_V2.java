@@ -1,5 +1,7 @@
 package twitter;
 import java.io.IOException;
+import java.util.Date;
+
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -10,10 +12,12 @@ import javax.servlet.http.HttpServletResponse;
 import functions.FollowerInfo;
 import functions.FollowingInfo;
 import models.FollowingOnly;
+import models.OperationLog;
 import models.RateLimitMonitor;
 import twitter4j.User;
 import utils.DbConnectUtil3;
 import utils.GetRateLimit;
+import utils.LogMsg;
 import utils.RoutingTable;
 
 @WebServlet(RoutingTable.followonly_sv2)
@@ -88,6 +92,7 @@ public class TwitterFollowingOnlySearch_V2 extends HttpServlet {
 			String searchTarget = request.getParameter("searchUser");
 			request.setAttribute("targetuser", searchTarget);	
 			System.out.println("# == [SV_⑥v2] setAttribute keyword = "+request.getParameter("searchUser"));
+			(new OperationLog(new Date(),request.getRemoteUser(),LogMsg.sv6,searchTarget,"Get Following Only START")).WriteLog();
 			//# 遷移先画面
 			String forwardpage = RoutingTable.followonly_r;
 			System.out.println("# == [SV_⑥v2] Forward page : "+forwardpage);
@@ -182,6 +187,7 @@ public class TwitterFollowingOnlySearch_V2 extends HttpServlet {
 //			request.setAttribute("followingonly_4",follower_count);
 //			request.setAttribute("followingonly_5",following_name);
 			//# 画面遷移
+			(new OperationLog(new Date(),request.getRemoteUser(),LogMsg.sv6,searchTarget,"Get Following Only END")).WriteLog();
 			RequestDispatcher dispatch = request.getRequestDispatcher(forwardpage);
 			dispatch.forward(request, response);
 		}

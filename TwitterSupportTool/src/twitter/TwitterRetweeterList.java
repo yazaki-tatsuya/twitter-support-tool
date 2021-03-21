@@ -1,5 +1,6 @@
 package twitter;
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -10,9 +11,11 @@ import javax.servlet.http.HttpServletResponse;
 
 import functions.FollowerInfo;
 import functions.RetweeterInfo;
+import models.OperationLog;
 import models.RetweetersList;
 import twitter4j.Status;
 import utils.DbConnectUtil3;
+import utils.LogMsg;
 import utils.RoutingTable;
 
 @WebServlet(RoutingTable.retweet_sv)
@@ -55,6 +58,8 @@ public class TwitterRetweeterList extends HttpServlet {
 			String searchUser = request.getParameter("searchUser");
 			request.setAttribute("tweetid", searchTweet);
 			request.setAttribute("userid", searchUser);	
+			(new OperationLog(new Date(),request.getRemoteUser(),LogMsg.sv5,searchUser+"/"+searchTweet,"Get Retweeter Test START")).WriteLog();
+			
 			//# 遷移先画面
 			String forwardpage = RoutingTable.retweet_r;
 			System.out.println("# == [SV_⑤] Forward page = "+forwardpage);
@@ -112,6 +117,7 @@ public class TwitterRetweeterList extends HttpServlet {
 //			request.setAttribute("result3",isFollower);
 			request.setAttribute("RetweetersList",rt);
 			//# 画面遷移
+			(new OperationLog(new Date(),request.getRemoteUser(),LogMsg.sv5,searchUser+"/"+searchTweet,"Get Retweeter Test START")).WriteLog();
 			RequestDispatcher dispatch = request.getRequestDispatcher(forwardpage);
 			dispatch.forward(request, response);			
 		}		

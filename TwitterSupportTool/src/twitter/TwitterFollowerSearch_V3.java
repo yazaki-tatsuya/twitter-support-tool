@@ -1,5 +1,7 @@
 package twitter;
 import java.io.IOException;
+import java.util.Date;
+
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -9,9 +11,11 @@ import javax.servlet.http.HttpServletResponse;
 
 import functions.FollowerInfo;
 import models.FollowersList;
+import models.OperationLog;
 import models.RateLimitMonitor;
 import twitter4j.User;
 import utils.DbConnectUtil3;
+import utils.LogMsg;
 import utils.RoutingTable;
 
 @WebServlet(RoutingTable.followerV3_sv)
@@ -89,6 +93,7 @@ public class TwitterFollowerSearch_V3 extends HttpServlet {
 			//# 遷移先画面
 			String forwardpage = RoutingTable.followerV3_r;
 			System.out.println("# == [SV_④v3] Forward page : "+forwardpage);
+			(new OperationLog(new Date(),request.getRemoteUser(),LogMsg.sv4,searchTarget,"Get Followers Query START")).WriteLog();
 
 			//# 最終結果の格納用
 			FollowersList fl = new FollowersList();
@@ -145,6 +150,7 @@ public class TwitterFollowerSearch_V3 extends HttpServlet {
 //			request.setAttribute("followersearch_3",follower_count);
 //			request.setAttribute("followersearch_4",follower_name);
 			//# 画面遷移
+			(new OperationLog(new Date(),request.getRemoteUser(),LogMsg.sv4,searchTarget,"Get Followers Query END")).WriteLog();
 			RequestDispatcher dispatch = request.getRequestDispatcher(forwardpage);
 			dispatch.forward(request, response);
 		}

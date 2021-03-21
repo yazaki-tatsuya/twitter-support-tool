@@ -1,6 +1,7 @@
 package twitter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.servlet.RequestDispatcher;
@@ -11,12 +12,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import models.HashTagSearchList;
+import models.OperationLog;
 import twitter4j.Query;
 import twitter4j.QueryResult;
 import twitter4j.Status;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import utils.DbConnectUtil3;
+import utils.LogMsg;
 import utils.RoutingTable;
 
 @WebServlet(RoutingTable.hashtagV2_sv)
@@ -49,6 +52,7 @@ public class TwitterHashTagSearch_V2 extends HttpServlet {
 			//# 検索対象キーワード & いいね数の取得（nullでない＆""でない場合に取得）
 			String searchTarget = "#"+(String) request.getSession().getAttribute("searchTag");
 			int favcount = Integer.parseInt((String)request.getSession().getAttribute("searchFav"));
+			(new OperationLog(new Date(),request.getRemoteUser(),LogMsg.sv1,searchTarget+"/"+favcount,"Get HashTag Tweet START")).WriteLog();
 			
 			//# 遷移先画面
 			String forwardpage = RoutingTable.hashtagV2_r;
@@ -151,6 +155,7 @@ public class TwitterHashTagSearch_V2 extends HttpServlet {
 //			request.setAttribute("result5",tweetid);
 //			request.setAttribute("result6",date);
 			//# 画面遷移
+			(new OperationLog(new Date(),request.getRemoteUser(),LogMsg.sv1,searchTarget+"/"+favcount,"Get HashTag Tweet END")).WriteLog();
 			RequestDispatcher dispatch = request.getRequestDispatcher(forwardpage);
 			dispatch.forward(request, response);		
 		}	
