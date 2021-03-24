@@ -24,7 +24,7 @@ public class TwitterSearchUserCsv extends HttpServlet {
 
 		//# 出力結果のヘッダー作成
 		PrintWriter out = response.getWriter();
-		out.append("No.,").append("ユーザー名,").append("ユーザーID,").append("公開／非公開,").append("直近のTweet内容\n");
+		out.append("No.,").append("ユーザー名,").append("ユーザーID,").append("公開／非公開,").append("フォロワー数,").append("フォロー数,").append("直近のTweet内容\n");
 		
 		//# 検索対象キーワードの取得
 		String searchTarget = (String) request.getSession().getAttribute("keyword_val");
@@ -52,6 +52,8 @@ public class TwitterSearchUserCsv extends HttpServlet {
 			out.append(ul.getUserName().get(i)+",");
 			out.append(ul.getUserId().get(i)+",");
 			out.append(ul.getIsLocked().get(i)+",");
+			out.append(ul.getFollowerNum().get(i)+",");
+			out.append(ul.getFriendNum().get(i)+",");
 			out.append("'"+tmp+"\n");
 
 	    	counter++;  

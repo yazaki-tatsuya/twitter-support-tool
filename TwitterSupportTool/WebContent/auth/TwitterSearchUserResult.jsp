@@ -34,10 +34,12 @@ session.setAttribute("keyword_val", request.getAttribute("keyword"));
 <table border="1" width="100%">
 	<tr>
 		<th width="25">No.</th>
-		<th width="150">ユーザー名</th>
+		<th width="200">ユーザー名</th>
 		<th width="150">ユーザーID</th>
-		<th width="200">公開／非公開</th>
-		<th width="700">直近のTweet内容</th>
+		<th width="100">公開／非公開</th>
+		<th width="100">フォロー数</th>
+		<th width="100">フォロワー数</th>
+		<th width="550">直近のTweet内容</th>
 	</tr>
 	<%
 	for(int i=0; i<ul.getUserId().size(); i++){
@@ -51,7 +53,9 @@ session.setAttribute("keyword_val", request.getAttribute("keyword"));
 		<td><%=i+1%></td>
 		<td><%=ul.getUserName().get(i) %></td>
 		<td><a href=<%=url%> target="_blank">@<%=ul.getUserId().get(i) %></a></td>
-		<td><%=ul.getIsLocked().get(i) %></td>
+		<td><%=ul.getIsLocked().get(i) %></td>	
+		<td><%=ul.getFriendNum().get(i) %></td>
+		<td><%=ul.getFollowerNum().get(i) %></td>
 		<td><%=ul.getNewTweet().get(i) %></td>
 <%-- 
 		<td><%=searchResult_n1.get(i) %></td>

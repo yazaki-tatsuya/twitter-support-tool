@@ -97,6 +97,8 @@ public class TwitterSearchUser extends HttpServlet {
 				                		ul.setUserName(user.getName());
 				                		ul.setUserId(user.getScreenName());
 				                		ul.setIsLocked("○：公開");
+				                		ul.setFollowerNum(String.valueOf(user.getFollowersCount()));
+				                		ul.setFriendNum(String.valueOf(user.getFriendsCount()));
 				                		ul.setNewTweet(user.getStatus().getText());
 //				                    	result_name1.add(user.getName());
 //				                    	result_name2.add(user.getScreenName());
@@ -107,6 +109,8 @@ public class TwitterSearchUser extends HttpServlet {
 				                		ul.setUserName(user.getName());
 				                		ul.setUserId(user.getScreenName());
 				                		ul.setIsLocked("✕：非公開");
+				                		ul.setFollowerNum("-");
+				                		ul.setFriendNum("-");
 				                		ul.setNewTweet("-");
 //				                    	result_name1.add(user.getName());
 //				                    	result_name2.add(user.getScreenName());
