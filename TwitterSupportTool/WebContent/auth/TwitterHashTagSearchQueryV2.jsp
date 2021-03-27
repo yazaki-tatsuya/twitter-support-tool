@@ -33,7 +33,17 @@ if(request.getParameter("searchFav")!=null){fav=request.getParameter("searchFav"
 		</tr>
 		<tr>
 			<th>いいね数：</th>
-			<td><input type="number" name="searchFav" id="searchFavKey" min=0 value="<%=fav%>" /></td>
+			<td>
+				<input type="number" name="searchFav" id="searchFavKey" min=0 value="<%=fav%>" list="favnumList" />
+					<datalist id="favnumList">
+						<option value=10>10</option>
+						<option value=50>50</option>
+						<option value=100>100</option>
+						<option value=250>250</option>
+						<option value=500>500</option>
+						<option value=1000>1000</option>
+					</datalist>
+			</td>
 		</tr>
 	</table><br />
 	<input type="submit" value="検索">
@@ -45,9 +55,12 @@ if(request.getParameter("searchFav")!=null){fav=request.getParameter("searchFav"
 			<%=request.getAttribute("error_msg") %>
 		<%}
 	%>
+	<h3>【利用シーン（例）】</h3>
+	<div class="indent_1 line_height">・感謝砲&#x2728;企画を効率良く探したい</div>
+	<div class="indent_1 line_height">・多くの「いいね&#x1f44d;」付いているツイート&#x1f4ac;を探したい</div>	
 	<h3>【制約】</h3>
 	<div class="indent_1 line_height">①最大「<%=RoutingTable.hashtagV2_pagelimit*100 %>」件まで表示します。</div>
-	<div class="indent_1 line_height">②直近１周間まで遡って検索します。</div>
+	<div class="indent_1 line_height">②直近一週間まで遡って検索します。</div>
 	</div>
 	<br />
 </body>

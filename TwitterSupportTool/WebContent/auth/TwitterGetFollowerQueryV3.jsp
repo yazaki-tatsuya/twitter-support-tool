@@ -30,6 +30,9 @@
 			<%=request.getAttribute("error_msg") %>
 		<%}
 	%>
+	<h3>【利用シーン（例）】</h3>
+	<div class="indent_1 line_height">・自分のフォロワーの○○さん&#x1f466;のページにすぐ飛びたい時・・・？（需要・・ある？）</div>
+	<div class="indent_1 line_height">・自分のフォロワーさん&#x1f467;を一覧で出したい時・・・？（需要・・ある？）</div>
 	<h3>【制約】</h3>
 		<div class="indent_1 line_height">・フォロワーの人数が<mark>「<%=RoutingTable.followerlimit_lists %>」人を超える場合</mark>は取得できません（改良中）。</div>	
 	<br />

@@ -30,11 +30,14 @@
 			<%=request.getAttribute("error_msg") %>
 		<%}
 	%>
+	<h3>【利用シーン（例）】</h3>
+	<div class="indent_1 line_height">・お友達&#x1f46a;を探したい</div>
+	<div class="indent_1 line_height">・見込み客&#x1f46a;を探したい</div>	
 	<h3>【制約】</h3>
 	<div class="indent_1">・最大「<%=RoutingTable.user_pagelimit * RoutingTable.unitpage_user %>」件まで表示します。</div>	
 	<h3>【注意】</h3>
-	<div class="indent_1">検索数が多い場合、１０秒〜１５秒程度掛かることがございます &#x1f647;</div>
-	<div class="indent_1">ご不便お掛けしますが、よろしくお願いいたします &#x1f647;</div>
+	<div class="indent_1 line_height">検索数が多い場合、１０秒〜１５秒程度掛かることがございます &#x1f647;</div>
+	<div class="indent_1 line_height">ご不便お掛けしますが、よろしくお願いいたします &#x1f647;</div>
 	</br>
 </body>
 <a href=<%=RoutingTable.home_fromauth %>>＞ホーム画面に戻る</a>

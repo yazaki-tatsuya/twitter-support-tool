@@ -30,6 +30,9 @@
 		<%}
 		int maxnum = RoutingTable.recent_pagelimit * RoutingTable.recent_unitpage;
 	%>
+	<h3>【利用シーン（例）】</h3>
+	<div class="indent_1 line_height">・○○さん&#x1f466;の直近のツイート&#x1f4ac;を分析したい（csv出力できるので、後はご自由に笑）</div>
+	<div class="indent_1 line_height">・○○さん&#x1f467;の直近のツイート&#x1f4ac;を広告なしで見たい</div>	
 	<h3>【制約】</h3>
 	<div class="indent_1 line_height">・直近のツイートを<mark>最大「<%=maxnum %>」件</mark>まで表示します。</div>
 	<div class="indent_1 line_height">・リツイートを取り除いて表示するため、最大件数よりも少なく表示されるケースがあります。</div>
