@@ -39,8 +39,9 @@ session.setAttribute("targetuser_val", request.getAttribute("targetuser"));
 		<th width="30">No.</th>
 		<th width="150">フォローしてるユーザーID</th>
 		<th width="100">自分のフォロワーか？</th>
+		<th width="100">フォローしてる人のフォロー数</th>
 		<th width="100">フォローしてる人のフォロワー数</th>
-		<th width="400">フォローしてる人のユーザー名</th>
+		<th width="300">フォローしてる人のユーザー名</th>
 		<th width="150">フォローしてる人のID</th>
 	</tr>
 	<%
@@ -55,7 +56,8 @@ session.setAttribute("targetuser_val", request.getAttribute("targetuser"));
 		<td><%=i+1%></td>
 		<td><a href=<%=url_user%> target="_blank">@<%=fo.getUser().get(i)%></a></td>
 		<td><%=fo.getIsFollower().get(i) %></td>
-		<td><%=fo.getFollowerCnt().get(i) %></td>
+		<td><%=fo.getFriendCnt().get(i) %></td>
+		<td><%=fo.getFollowerCnt().get(i) %></td>		
 		<td><%=fo.getFollowingName().get(i) %></td>
 		<td><%=fo.getId().get(i) %></td>
 		<%--		

@@ -129,6 +129,7 @@ public class TwitterFollowerSearch_V3 extends HttpServlet {
 					if(follower != null) {
 						fl.setId(follower.getId());
 						fl.setUser(follower.getScreenName());
+						fl.setFriendCnt(follower.getFriendsCount());
 						fl.setFollowerCnt(follower.getFollowersCount());
 						fl.setFollowerName(follower.getName());
 //						id.add(follower.getId());

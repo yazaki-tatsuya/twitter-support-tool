@@ -8,18 +8,21 @@ public class FollowersList {
 
 	private List<Long> id = new ArrayList<Long>();
 	private List<String> screen_name = new ArrayList<String>();
+	private List<Integer> friend_count = new ArrayList<Integer>();
 	private List<Integer> follower_count = new ArrayList<Integer>();
 	private List<String> follower_name = new ArrayList<String>();
 	
 	//# set
 	public void setId(long id) {this.id.add(id);}
 	public void setUser(String screen_name) {this.screen_name.add(screen_name);}
+	public void setFriendCnt(Integer friend_count) {this.friend_count.add(friend_count);}
 	public void setFollowerCnt(Integer follower_count) {this.follower_count.add(follower_count);}
 	public void setFollowerName(String following_name) {this.follower_name.add(following_name);}
 	
 	//# get
 	public List<Long> getId() {return this.id;}
 	public List<String> getUser() {return this.screen_name;}
+	public List<Integer> getFriendCnt() {return this.friend_count;}
 	public List<Integer> getFollowerCnt() {return this.follower_count;}
 	public List<String> getFollowerName() {return this.follower_name;}
 }

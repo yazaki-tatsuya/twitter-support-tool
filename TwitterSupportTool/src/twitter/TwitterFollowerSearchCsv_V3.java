@@ -24,7 +24,7 @@ public class TwitterFollowerSearchCsv_V3 extends HttpServlet {
 
 		//# 出力結果のヘッダー作成
 		PrintWriter out = response.getWriter();
-		out.append("No.,").append("ユーザID,").append("フォロワー数,").append("ユーザ名,").append("システムID\n");
+		out.append("No.,").append("ユーザID,").append("フォロー数,").append("フォロワー数,").append("ユーザ名,").append("システムID\n");
 		
 		//# 検索対象キーワードの取得
 		String searchTarget = (String) request.getSession().getAttribute("targetuser_val");
@@ -50,6 +50,7 @@ public class TwitterFollowerSearchCsv_V3 extends HttpServlet {
 	    	//# フォロワーの一覧データのprint
 	    	out.append(counter+",");
 			out.append(fl.getUser().get(i)+",");
+			out.append(fl.getFriendCnt().get(i)+",");
 			out.append(fl.getFollowerCnt().get(i)+",");
 			out.append(tmp+",");
 			out.append("'"+fl.getId().get(i)+"\n");

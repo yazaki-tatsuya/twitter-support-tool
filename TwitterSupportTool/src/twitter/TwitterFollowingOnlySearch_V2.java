@@ -166,6 +166,7 @@ public class TwitterFollowingOnlySearch_V2 extends HttpServlet {
 						fo.setId(following.getId());
 						if(isFollower) {fo.setIsFollower("○(YES)");}else {fo.setIsFollower("✕(NO)");}
 						fo.setUser(following.getScreenName());
+						fo.setFriendCnt(following.getFriendsCount());
 						fo.setFollowerCnt(following.getFollowersCount());
 						fo.setFollowingName(following.getName());
 						

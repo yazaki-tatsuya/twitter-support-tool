@@ -24,7 +24,7 @@ public class TwitterFollowingOnlySearchCsv extends HttpServlet {
 
 		//# 出力結果のヘッダー作成
 		PrintWriter out = response.getWriter();
-		out.append("No.,").append("フォローしてるユーザID,").append("自分のフォロワーか？,").append("フォローしてる人のフォロワー数,").append("フォローしてる人のユーザ名,").append("フォローしてる人のID\n");
+		out.append("No.,").append("フォローしてるユーザID,").append("自分のフォロワーか？,").append("フォローしてる人のフォロー数,").append("フォローしてる人のフォロワー数,").append("フォローしてる人のユーザ名,").append("フォローしてる人のID\n");
 		
 		//# 検索対象キーワードの取得
 		String searchTarget = (String) request.getSession().getAttribute("username");
@@ -51,6 +51,7 @@ public class TwitterFollowingOnlySearchCsv extends HttpServlet {
 	    	out.append(counter+",");
 			out.append(fo.getUser().get(i)+",");
 			out.append(fo.getIsFollower().get(i)+",");
+			out.append(fo.getFriendCnt().get(i)+",");
 			out.append(fo.getFollowerCnt().get(i)+",");
 			out.append(tmp+",");
 			out.append("'"+fo.getId().get(i)+"\n");
