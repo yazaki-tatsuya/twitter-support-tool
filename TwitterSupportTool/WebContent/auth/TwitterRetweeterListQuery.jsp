@@ -29,13 +29,14 @@ if(request.getParameter("searchUser")!=null){user=request.getParameter("searchUs
 	<table border="1" >
 		<tr>
 			<th>ツイートID（必須）</th>
-			<td><input type="number" name="searchTweet" id="searchTweetKey" /></td>
+			<td><input type="number" name="searchTweet" id="searchTweetKey" /> <a href=<%=RoutingTable.retweet_howtoid %> target="_blank">→IDの調べ方</a></td>
 		</tr>
 		<tr>
 			<th>ユーザID（必須）</th>
 			<td><input type="text" name="searchUser" id="searchUserKey" value="<%=user%>" /></td>
 		</tr>
-	</table><br />
+	</table>
+	<br />
 	<input type="submit" value="検索">
 	<input id="hid_functionid" type="hidden" name="FunctionId" value="TWRETSCH"/>
 	</form>
@@ -44,6 +45,8 @@ if(request.getParameter("searchUser")!=null){user=request.getParameter("searchUs
 			<%=request.getAttribute("error_msg") %>
 		<%}
 	%>
+	<h3>【利用シーン（例）】</h3>
+	<div class="indent_1 line_height">・RT&#x1f501;企画のお礼時に役に立つ・・？（リツイート&#x1f501;した人のページに飛ぶURLも出ます・・）</div>
 	<h3>【制約事項】</h3>
 	<div class="indent_1 line_height">・フォロワーが<mark>「<%=RoutingTable.followerlimit_ids %>」人を超える場合</mark>は取得できません（改良中）。</div>
 	<div class="indent_1 line_height">・リツイートが<mark>「100」件を超える場合は最大「100件」まで</mark>しか取得できません。</div>

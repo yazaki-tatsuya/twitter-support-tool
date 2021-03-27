@@ -5,6 +5,7 @@ public class RoutingTable {
 	//## URL共通部分（認証対象の改装）
 	public static final String apphome = "https://tennis-database.azurewebsites.net";
 	// public static final String apphome = "https://ik1-336-28337.vs.sakura.ne.jp:8443/TwitterSupportTool";
+	//public static final String apphome = "https://twitter-support-tool.com";
 	public static final String authzone = "auth";
 	
 	//## 共通部品
@@ -29,9 +30,9 @@ public class RoutingTable {
 	public static final String ep_getRateLimitStatus = "/application/rate_limit_status";
 	
 	//# API利用回数の上限（全体共通）
-	public static final int api_limit = 20;		//5回位にしたい
+	public static final int api_limit = 10;		//5回位にしたい
 	//# API認証キーの最大個数
-	public static final int authkey_max = 7;	//Max=5
+	public static final int authkey_max = 10;	//Max=10
 	//# API上限チェック時の安全率（入り口チェック用）
 	public static final double safety_ratio = 0.5;	//0.4〜0.6程度(同時に複数人が照会する事も想定して)
 	//# API上限チェック時の安全率（V2＆V3切り替え判定用）
@@ -94,6 +95,7 @@ public class RoutingTable {
 	public static final int user_pagelimit = 15;
 
 	//# (０３)○○さんの直近Tweet検索(Model使用＆csvのAPI消費抑止版)
+	public static final String recentV2_q_fromauth = "TwitterRecentTweetQueryV2.jsp";
 	public static final String recentV2_q = authzone + "/TwitterRecentTweetQueryV2.jsp";
 	public static final String recentV2_sv = "/" + authzone + "/recent_tweet_search2";
 	public static final String recentV2_r = "TwitterRecentTweetResultV2.jsp";
@@ -123,6 +125,7 @@ public class RoutingTable {
 	public static final String retweet_sv = "/" + authzone + "/retweeter_list";
 	public static final String retweet_r = "TwitterRetweeterListResult.jsp";
 	public static final String retweet_csv = "/" + authzone + "/retweeter_list_csv";
+	public static final String retweet_howtoid = "./HowToCheckTweetId.jsp";
 	
 	//# (０６)片思い一覧（フォローしてるけどフォローバックされていない）
 	public static final String followonly_q = authzone + "/TwitterFollowingOnlyQuery.jsp";
