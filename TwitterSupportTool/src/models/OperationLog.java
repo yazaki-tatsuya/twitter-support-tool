@@ -62,7 +62,7 @@ public class OperationLog {
 				}
 			}
 			
-			pwriter.printf("|%-25s|%-10s|%-14s|%-"+(40-zenkaku_count)+"s|%-50s", formatdate,this.op_user,this.op_func,this.searchkey,this.message);
+			pwriter.printf("|%-25s|%-10s|%-14s|%-50s|%-"+(40-zenkaku_count)+"s", formatdate,this.op_user,this.op_func,this.message,this.searchkey);
 			pwriter.write("\r\n");
 			pwriter.close();
 		} catch (IOException e) {
