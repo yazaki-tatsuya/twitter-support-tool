@@ -1,0 +1,17 @@
+# Oracle dump / physical DB files
+*.dmp
+*.dbf
+*.ctl
+*.ora
+
+# Data Pump / local logs
+*.log
+
+# SSH keys / secrets
+*.pem
+*.key
+*.ppk
+
+# Local backup directories
+backup/
+dump/
